@@ -4,10 +4,12 @@ public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f;
     private float _currentHealth;
-
+    private bool _isDead;
+    
     private void Awake()
     {
         _currentHealth = maxHealth;
+        _isDead = false;
     }
 
     public void TakeDamage(float damageAmount)
@@ -18,10 +20,31 @@ public class Health : MonoBehaviour, IDamageable
         
         if (_currentHealth <= 0f)
         {
-            Destroy(gameObject); // Object dies
+            Die();
         }
     }
+
+    private void Die()
+    {
+        if (_isDead)
+        {
+            return;
+        }
+        
+        _isDead = true;
+        
+        ZombieAI zombieAI = GetComponent<ZombieAI>();
+            
+        if (zombieAI != null)
+        {
+            zombieAI.EnterDeadState();
+            return;
+        }
+        
+        Destroy(gameObject); // Object dies
+    }
 }
+
 
 public interface IDamageable
 {
