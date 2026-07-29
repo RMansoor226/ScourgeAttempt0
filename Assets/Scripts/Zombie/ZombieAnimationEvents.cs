@@ -11,7 +11,13 @@ public class ZombieAnimationEvents : MonoBehaviour
 
     public void DamagePlayerEvent()
     {
-        Debug.Log("DamagePLayerEvent called");
+        Debug.Log("DamagePlayerEvent called");
         _zombieAI.Attack();
+    }
+
+    public void AttackSoundEvent()
+    {
+        Debug.Log("AttackSoundEvent called");
+        _zombieAI.PlayAttackSound();
     }
 }

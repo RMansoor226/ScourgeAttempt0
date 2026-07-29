@@ -15,6 +15,12 @@ public class ZombieAI : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     public ZombieState currentState;
     private Animator _animator;
+    private AudioSource _audioSource;
+
+    [SerializeField] private AudioClip idleClip;
+    [SerializeField] private AudioClip chaseClip;
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip deathClip;
 
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
@@ -24,6 +30,7 @@ public class ZombieAI : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
         currentState = ZombieState.Idle;
         _animator = GetComponentInChildren<Animator>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -102,8 +109,19 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
+    // Deals damage to player when the zombie's animation visually reaches them
     public void Attack()
     {
+        float distance = Vector3.Distance(
+            transform.position, 
+            player.position);
+
+        if (distance > _navMeshAgent.stoppingDistance)
+        {
+            Debug.Log("Too far away to attack");
+            return;
+        }
+        
         if (player.TryGetComponent(out IDamageable damageable))
         {
             Debug.Log("Zombie damaging player");
@@ -146,6 +164,12 @@ public class ZombieAI : MonoBehaviour
         _attackTimer -= Time.deltaTime;
     }
 
+    // Plays the attack sound when at the beginning of the zombie attack animation clip
+    public void PlayAttackSound()
+    {
+        _audioSource.PlayOneShot(attackClip);
+    }
+
     // A public method to allow other scripts like Health to inform Zombie AI of death
     public void EnterDeadState()
     {
@@ -158,6 +182,7 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
+        _audioSource.PlayOneShot(deathClip);
         
         Destroy(gameObject, 5f);
     }
