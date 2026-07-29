@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Health : MonoBehaviour, IDamageable
@@ -5,6 +6,7 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private float maxHealth = 100f;
     private float _currentHealth;
     private bool _isDead;
+    [SerializeField] private bool invincible = false;
     
     private void Awake()
     {
@@ -32,6 +34,13 @@ public class Health : MonoBehaviour, IDamageable
         }
         
         _isDead = true;
+        
+        if (invincible)
+        {
+            Debug.Log($"{gameObject.name} is invincible.");
+            _currentHealth = 1f;   // Prevent repeatedly calling Die()
+            return;
+        }
         
         ZombieAI zombieAI = GetComponent<ZombieAI>();
             

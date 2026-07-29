@@ -14,11 +14,16 @@ public class ZombieAI : MonoBehaviour
     [SerializeField] private Transform player;
     private NavMeshAgent _navMeshAgent;
     public ZombieState currentState;
+    private Animator _animator;
+
+    [SerializeField] private float attackCooldown = 1.5f;
+    private float _attackTimer;
 
     private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         currentState = ZombieState.Idle;
+        _animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -28,6 +33,7 @@ public class ZombieAI : MonoBehaviour
         {
             case ZombieState.Idle:
                 Debug.Log("Zombie idle");
+                _animator.SetBool("IsWalking", false);
                 TryChasePlayer();
                 break;
             case ZombieState.Chasing:
@@ -41,6 +47,7 @@ public class ZombieAI : MonoBehaviour
                 Debug.Log("Zombie dead");
                 break; // Death is handled by EnterDeadState()
             default:
+                Debug.Log("Invalid Zombie AI State");
                 break;
         }
     }
@@ -74,6 +81,7 @@ public class ZombieAI : MonoBehaviour
         if (player != null)
         {
             _navMeshAgent.SetDestination(player.position); 
+            _animator.SetBool("IsWalking", true);
         }
     }
 
@@ -88,10 +96,23 @@ public class ZombieAI : MonoBehaviour
             ChangeState(ZombieState.Attacking);
             Debug.Log("Zombie attacking");
         }
+        else
+        {
+            ChangeState(ZombieState.Chasing);
+        }
     }
 
-    private void Attack()
+    public void Attack()
     {
+        if (player.TryGetComponent(out IDamageable damageable))
+        {
+            Debug.Log("Zombie damaging player");
+            damageable.TakeDamage(25f);
+        }
+        else
+        {
+            Debug.Log("Not Damageable");
+        }
         
     }
 
@@ -106,15 +127,23 @@ public class ZombieAI : MonoBehaviour
             transform.position,
             player.position
         );
-
-        if (distance > _navMeshAgent.stoppingDistance)
-        {
-            ChangeState(ZombieState.Chasing);
-            Debug.Log("Zombie chasing again");
-            return;
-        }
         
-        Debug.Log("Zombie damaging player");
+        if (_attackTimer <= 0f)
+        {
+            if (distance <= _navMeshAgent.stoppingDistance)
+            {
+                _animator.SetTrigger("Attack");
+                _attackTimer = attackCooldown;
+            }
+            else
+            {
+                Debug.Log("Player escaped. Zombie chasing again");
+                ChangeState(ZombieState.Chasing);
+                _animator.SetBool("IsWalking", true);
+                return;
+            }
+        }
+        _attackTimer -= Time.deltaTime;
     }
 
     // A public method to allow other scripts like Health to inform Zombie AI of death
@@ -128,6 +157,7 @@ public class ZombieAI : MonoBehaviour
         ChangeState(ZombieState.Dead);
         
         _navMeshAgent.enabled = false;
+        _animator.SetTrigger("Death");
         
         Destroy(gameObject, 5f);
     }
