@@ -94,7 +94,7 @@ public class ZombieAI : MonoBehaviour
         if (player != null)
         {
             ChangeState(ZombieState.Chasing);
-            Debug.Log("Zombie chasing");
+            //Debug.Log("Zombie chasing");
         }
     }
 
@@ -123,7 +123,7 @@ public class ZombieAI : MonoBehaviour
         if (_navMeshAgent.hasPath && _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
         {
             ChangeState(ZombieState.Attacking);
-            Debug.Log("Zombie attacking");
+            //Debug.Log("Zombie attacking");
         }
         else
         {
@@ -140,18 +140,18 @@ public class ZombieAI : MonoBehaviour
 
         if (distance > _navMeshAgent.stoppingDistance)
         {
-            Debug.Log("Too far away to attack");
+            //Debug.Log("Too far away to attack");
             return;
         }
         
         if (player.TryGetComponent(out IDamageable damageable))
         {
-            Debug.Log("Zombie damaging player");
+            //Debug.Log("Zombie damaging player");
             damageable.TakeDamage(25f);
         }
         else
         {
-            Debug.Log("Not Damageable");
+            //Debug.Log("Not Damageable");
         }
         
     }
@@ -220,7 +220,6 @@ public class ZombieAI : MonoBehaviour
         _animator.SetTrigger("Death");
         PlayDeathSound();
 
-        _spawner.ZombieDied();
         Destroy(gameObject, 5f);
     }
 }

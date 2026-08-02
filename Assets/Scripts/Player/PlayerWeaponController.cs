@@ -16,7 +16,7 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if (_inputHandler.FireHeld)
         {
-            Debug.Log("Fire Held is: "+ _inputHandler.FireHeld);
+            //Debug.Log("Fire Held is: "+ _inputHandler.FireHeld);
             FireWeapon();
         }
     }
@@ -37,8 +37,8 @@ public class PlayerWeaponController : MonoBehaviour
                 50f,
                 hitMask))
         {
-            Debug.Log("Weapon has been fired!");
-            Debug.Log("Object Hit: " + hit.collider.gameObject.name);
+            //Debug.Log("Weapon has been fired!");
+            //Debug.Log("Object Hit: " + hit.collider.gameObject.name);
             
             if (hit.collider.TryGetComponent(out IDamageable damageable))
             {

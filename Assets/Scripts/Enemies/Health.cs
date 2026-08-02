@@ -1,12 +1,17 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f;
+    
     private float _currentHealth;
     private bool _isDead;
+    
     [SerializeField] private bool invincible = false;
+
+    public Action OnDeath;
     
     private void Awake()
     {
@@ -18,7 +23,7 @@ public class Health : MonoBehaviour, IDamageable
     {
         _currentHealth -= damageAmount;
         
-        Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
+        //Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
         
         if (_currentHealth <= 0f)
         {
@@ -41,6 +46,8 @@ public class Health : MonoBehaviour, IDamageable
             _currentHealth = 1f;   // Prevent repeatedly calling Die()
             return;
         }
+
+        OnDeath?.Invoke();
         
         ZombieAI zombieAI = GetComponent<ZombieAI>();
             
