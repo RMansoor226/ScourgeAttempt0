@@ -25,9 +25,19 @@ public class ZombieAI : MonoBehaviour
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
 
+    private ZombieSpawner _spawner;
+
     private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
+
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        
         currentState = ZombieState.Idle;
         _animator = GetComponentInChildren<Animator>();
         _audioSource = GetComponent<AudioSource>();
@@ -39,7 +49,7 @@ public class ZombieAI : MonoBehaviour
         switch (currentState)
         {
             case ZombieState.Idle:
-                Debug.Log("Zombie idle");
+                //Debug.Log("Zombie idle");
                 _animator.SetBool("IsWalking", false);
                 TryChasePlayer();
                 break;
@@ -51,12 +61,17 @@ public class ZombieAI : MonoBehaviour
                 DamagePlayer();
                 break;
             case ZombieState.Dead:
-                Debug.Log("Zombie dead");
+                //Debug.Log("Zombie dead");
                 break; // Death is handled by EnterDeadState()
             default:
                 Debug.Log("Invalid Zombie AI State");
                 break;
         }
+    }
+
+    public void Initialize(ZombieSpawner zombieSpawner)
+    {
+        _spawner = zombieSpawner;
     }
 
     private void ChangeState(ZombieState newState)
@@ -89,6 +104,13 @@ public class ZombieAI : MonoBehaviour
         {
             _navMeshAgent.SetDestination(player.position); 
             _animator.SetBool("IsWalking", true);
+            
+            if (!_audioSource.isPlaying)
+            {
+                _audioSource.clip = chaseClip;
+                _audioSource.loop = true;
+                _audioSource.Play();
+            }
         }
     }
 
@@ -155,7 +177,7 @@ public class ZombieAI : MonoBehaviour
             }
             else
             {
-                Debug.Log("Player escaped. Zombie chasing again");
+                //Debug.Log("Player escaped. Zombie chasing again");
                 ChangeState(ZombieState.Chasing);
                 _animator.SetBool("IsWalking", true);
                 return;
@@ -167,7 +189,21 @@ public class ZombieAI : MonoBehaviour
     // Plays the attack sound when at the beginning of the zombie attack animation clip
     public void PlayAttackSound()
     {
+        if (_audioSource.isPlaying)
+        {
+            _audioSource.Stop();
+        }
         _audioSource.PlayOneShot(attackClip);
+    }
+
+    public void PlayDeathSound()
+    {
+        if (_audioSource.isPlaying)
+        {
+            _audioSource.Stop();
+        }
+        
+        _audioSource.PlayOneShot(deathClip);
     }
 
     // A public method to allow other scripts like Health to inform Zombie AI of death
@@ -182,8 +218,9 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
-        _audioSource.PlayOneShot(deathClip);
-        
+        PlayDeathSound();
+
+        _spawner.ZombieDied();
         Destroy(gameObject, 5f);
     }
 }
