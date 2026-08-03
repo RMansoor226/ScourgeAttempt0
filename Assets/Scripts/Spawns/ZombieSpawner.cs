@@ -67,7 +67,7 @@ public class ZombieSpawner : MonoBehaviour
     public void ZombieDied()
     {
         _zombiesAlive--;
-        Debug.Log(_zombiesAlive + " zombies alive");
+        //Debug.Log(_zombiesAlive + " zombies alive");
     }
     
     public IEnumerator SpawnWave(WaveSettings settings)

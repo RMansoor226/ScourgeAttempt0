@@ -43,9 +43,9 @@ public class WaveManager : MonoBehaviour
         float zombieHealth = baseZombieHealth * (currentWave + 1) * healthScaleFactor;
         float zombieSpeed = baseZombieSpeed + (currentWave * speedScaleFactor);
 
-        Debug.Log(zombieCount + " zombies");
-        Debug.Log(zombieHealth + " health per zombie");
-        Debug.Log(zombieSpeed + " units of speed");
+        // Debug.Log(zombieCount + " zombies");
+        // Debug.Log(zombieHealth + " health per zombie");
+        // Debug.Log(zombieSpeed + " units of speed");
         
         return new WaveSettings(
             zombieCount,
@@ -58,7 +58,7 @@ public class WaveManager : MonoBehaviour
     {
         yield return new WaitForSeconds(waveDelay);
 
-        Debug.Log("Starting Wave " + currentWave);
+        // Debug.Log("Starting Wave " + currentWave);
         roundCounter.UpdateRoundCounter(currentWave);
 
         WaveSettings settings = GetWaveSettings(currentWave);

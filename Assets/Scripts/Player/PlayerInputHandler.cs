@@ -35,9 +35,9 @@ public class PlayerInputHandler : MonoBehaviour
         LookInput = _inputActions.Player.Look.ReadValue<Vector2>();
         
         JumpPressed = _inputActions.Player.Jump.WasPressedThisFrame();
-        
         SprintActive = _inputActions.Player.Sprint.IsPressed();
         
         FireHeld = _inputActions.Player.Fire.WasPressedThisFrame();
+        ReloadPressed = _inputActions.Player.Reload.WasPressedThisFrame();
     }
 }
