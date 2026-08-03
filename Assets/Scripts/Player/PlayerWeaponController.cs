@@ -11,6 +11,9 @@ public class PlayerWeaponController : MonoBehaviour
     
     [SerializeField] 
     private LayerMask hitMask;
+
+    [SerializeField] 
+    private AmmoCounter ammoCounter;
     
     private WeaponData _weapon;
     
@@ -26,6 +29,8 @@ public class PlayerWeaponController : MonoBehaviour
         
         _currentMagazine = _weapon.MagazineCapacity;
         _reserveAmmo = _weapon.ReserveAmmo;
+        
+        ammoCounter.UpdateAmmoCounter(_currentMagazine, _reserveAmmo);
     }
 
     // Update is called once per frame
@@ -56,6 +61,8 @@ public class PlayerWeaponController : MonoBehaviour
                 5.0f);
 
             _currentMagazine--;
+            ammoCounter.UpdateAmmoCounter(_currentMagazine, _reserveAmmo);
+            
             //Debug.Log($"Magazine currently has {_currentMagazine} bullets");
 
             if (Physics.Raycast(
@@ -100,6 +107,8 @@ public class PlayerWeaponController : MonoBehaviour
         _currentMagazine += bulletsReloaded;
         
         _isReloading = false;
+        
+        ammoCounter.UpdateAmmoCounter(_currentMagazine, _reserveAmmo);
         
         //Debug.Log($"Reload complete. Reserve ammo is {_reserveAmmo}");
     }
