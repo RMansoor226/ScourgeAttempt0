@@ -1574,6 +1574,8 @@ MonoBehaviour:
   - {fileID: 1755463874}
   - {fileID: 420865501}
   - {fileID: 42093205}
+  spawnDelay: 3
+  maxZombies: 4
 --- !u!114 &1332795554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1587,8 +1589,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   currentWave: 0
-  initialWaveZombies: 2
-  waveDelay: 10
+  waveDelay: 5
+  initialWaveZombies: 4
+  hordeScaleFactor: 2
+  baseZombieHealth: 25
+  healthScaleFactor: 1
+  baseZombieSpeed: 2
+  speedScaleFactor: 0.25
+  zombieSpawner: {fileID: 1332795553}
 --- !u!1 &1595008361
 GameObject:
   m_ObjectHideFlags: 0

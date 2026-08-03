@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5226382915664667769}
   - component: {fileID: 7565892513222817535}
   - component: {fileID: 3525335101000203903}
+  - component: {fileID: 2748239717415891257}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -212,6 +213,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2748239717415891257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6279186009749872689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b96d04b9635a4b17aa0963b75389c135, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Zombie
 --- !u!1001 &2207978336576098406
 PrefabInstance:
   m_ObjectHideFlags: 0

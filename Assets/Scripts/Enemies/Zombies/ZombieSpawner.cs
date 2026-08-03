@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class ZombieSpawner : MonoBehaviour
 {
@@ -8,11 +10,15 @@ public class ZombieSpawner : MonoBehaviour
 
     [SerializeField] 
     private Transform[] spawnPoints;
+    
+    [SerializeField]
+    private float spawnDelay = 3f;
+    
+    [SerializeField]
+    private int maxZombies = 4;
 
     private int _zombiesRemaining;
     private int _zombiesAlive;
-    private readonly float _spawnDelay = 3f;
-    private readonly int _maxZombies = 4;
 
     public bool WaveComplete => 
         _zombiesRemaining == 0 && 
@@ -36,22 +42,23 @@ public class ZombieSpawner : MonoBehaviour
         _zombiesAlive = 0;
     }
     
-    private void SpawnZombie()
+    private void SpawnZombie(WaveSettings settings)
     {
         int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
 
         Transform spawnPoint = spawnPoints[randomSpawnIndex];
         
-        GameObject zombie = Instantiate(
+        GameObject zombieObject = Instantiate(
             zombiePrefab,
             spawnPoint.position,
             spawnPoint.rotation
         );
+        
+        // Initialize zombie difficulty stats
+        Zombie zombie = zombieObject.GetComponent<Zombie>();
+        zombie.Initialize(settings);
 
-        zombie.GetComponent<Health>().OnDeath += ZombieDied;
-
-        ZombieAI zombieAI = zombie.GetComponent<ZombieAI>();
-        zombieAI.Initialize(this);
+        zombie.GetZombieHealth().OnDeath += ZombieDied;
         
         _zombiesAlive++;
         //Debug.Log("Spawning zombie on spawnPoint " + randomSpawnIndex);
@@ -63,21 +70,21 @@ public class ZombieSpawner : MonoBehaviour
         Debug.Log(_zombiesAlive + " zombies alive");
     }
     
-    public IEnumerator SpawnWave(int zombiesPerWave)
+    public IEnumerator SpawnWave(WaveSettings settings)
     {
-        _zombiesRemaining = zombiesPerWave;
-        Debug.Log("Max zombies is: " + zombiesPerWave);
+        _zombiesRemaining = settings.zombieCount;
+        //Debug.Log("Max zombies is: " + zombiesPerWave);
         
         while (_zombiesRemaining > 0)
         {
-            if (_zombiesAlive < _maxZombies)
+            if (_zombiesAlive < maxZombies)
             {
-                SpawnZombie();
+                SpawnZombie(settings);
                 _zombiesRemaining--;
-                Debug.Log(_zombiesRemaining + " zombies remaining");
+                //Debug.Log(_zombiesRemaining + " zombies remaining");
             }
             
-            yield return new WaitForSeconds(_spawnDelay);
+            yield return new WaitForSeconds(spawnDelay);
         }
     }
 }

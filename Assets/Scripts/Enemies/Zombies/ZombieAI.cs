@@ -43,6 +43,11 @@ public class ZombieAI : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
+    public void Initialize(float moveSpeed)
+    {
+        _navMeshAgent.speed = moveSpeed;
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Health : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float maxHealth = 25f;
     
     private float _currentHealth;
     private bool _isDead;
@@ -19,8 +19,15 @@ public class Health : MonoBehaviour, IDamageable
         _isDead = false;
     }
 
+    public void Initialize(float initialHealth)
+    {
+        maxHealth = initialHealth;
+        _currentHealth = initialHealth;
+    }
+    
     public void TakeDamage(float damageAmount)
     {
+        //Debug.Log($"{gameObject.name} had {_currentHealth} health.");
         _currentHealth -= damageAmount;
         
         //Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
