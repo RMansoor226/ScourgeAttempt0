@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -27,6 +28,9 @@ public class WaveManager : MonoBehaviour
     private float speedScaleFactor = 0.1f;
 
     [SerializeField] private ZombieSpawner zombieSpawner;
+
+    [SerializeField]
+    private RoundCounter roundCounter;
     
     private void Start()
     {
@@ -55,6 +59,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(waveDelay);
 
         Debug.Log("Starting Wave " + currentWave);
+        roundCounter.UpdateRoundCounter(currentWave);
 
         WaveSettings settings = GetWaveSettings(currentWave);
         
