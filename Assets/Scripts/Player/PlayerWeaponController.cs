@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Experimental.Audio;
+using Vector2 = UnityEngine.Vector2;
 
 public class PlayerWeaponController : MonoBehaviour
 {
@@ -15,7 +17,13 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] 
     private AmmoCounter ammoCounter;
     
+    [SerializeField]
+    private PlayerLook playerView;
+    
     private WeaponData _weapon;
+
+    private Vector2 currentRecoil;
+    private Vector2 targetRecoil;
     
     private int _currentMagazine;
     private int _reserveAmmo;
@@ -53,17 +61,25 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if (CanFire())
         {
+            // Reduce magazine count
+            _currentMagazine--;
+            ammoCounter.UpdateAmmoCounter(_currentMagazine, _reserveAmmo);
+            
+            //Debug.Log($"Magazine currently has {_currentMagazine} bullets");
+
+            playerView.AddRecoil(
+                _weapon.VerticalRecoil, 
+                _weapon.HorizontalRecoil,
+                _weapon.RecoilRate,
+                _weapon.CenterSpeed);
+            
+            // Raycast bullet
             RaycastHit hit;
             Debug.DrawRay(
                 camera.transform.position, 
                 camera.transform.forward, 
                 Color.red,
                 5.0f);
-
-            _currentMagazine--;
-            ammoCounter.UpdateAmmoCounter(_currentMagazine, _reserveAmmo);
-            
-            //Debug.Log($"Magazine currently has {_currentMagazine} bullets");
 
             if (Physics.Raycast(
                     camera.transform.position,

@@ -12,7 +12,7 @@ public class AmmoCounter : MonoBehaviour
 
     public void UpdateAmmoCounter(int magazine, int reserve)
     {
-        Debug.Log("Updating ammo counter");
+        //Debug.Log("Updating ammo counter");
         _ammoText.text = $"{magazine} / {reserve}";
     }
 }

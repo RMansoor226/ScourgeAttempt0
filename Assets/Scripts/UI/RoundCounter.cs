@@ -12,7 +12,7 @@ public class RoundCounter : MonoBehaviour
 
     public void UpdateRoundCounter(int round)
     {
-        Debug.Log("Updating round");
+        //Debug.Log("Updating round");
         _roundText.text = "Round " + (round + 1);
     }
 }
