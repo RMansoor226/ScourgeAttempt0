@@ -11,8 +11,8 @@ public class PlayerLook : MonoBehaviour
     private float _verticalRotation = 0f;
     private float _horizontalRotation = 0f;
 
-    private Vector2 currentRecoil;
-    private Vector2 targetRecoil;
+    private Vector2 _currentRecoil;
+    private Vector2 _targetRecoil;
     private float _recoilRate;
     private float _centerSpeed;
 
@@ -34,13 +34,13 @@ public class PlayerLook : MonoBehaviour
         float mouseX = look.x * lookSensitivity * Time.deltaTime;
         float mouseY = look.y * lookSensitivity * Time.deltaTime;
         
-        currentRecoil = Vector2.Lerp(
-            currentRecoil,
-            targetRecoil,
+        _currentRecoil = Vector2.Lerp(
+            _currentRecoil,
+            _targetRecoil,
             _recoilRate * Time.deltaTime);
 
-        targetRecoil = Vector2.Lerp(
-            targetRecoil,
+        _targetRecoil = Vector2.Lerp(
+            _targetRecoil,
             Vector2.zero,
             _centerSpeed * Time.deltaTime);
         
@@ -48,26 +48,26 @@ public class PlayerLook : MonoBehaviour
         _verticalRotation -= mouseY;
         _verticalRotation = Mathf.Clamp(_verticalRotation, -90f, 90f);
 
-        float pitchWithRecoil = _verticalRotation - currentRecoil.y;
+        float pitchWithRecoil = _verticalRotation - _currentRecoil.y;
 
         cameraHolder.localRotation = Quaternion.Euler(pitchWithRecoil, 0f, 0f);
         
         // Horizontal player rotation
         _horizontalRotation += mouseX;
         
-        float yawWithRecoil = _horizontalRotation + currentRecoil.x;
+        float yawWithRecoil = _horizontalRotation + _currentRecoil.x;
         
         transform.rotation = Quaternion.Euler(0f, yawWithRecoil, 0f);
     }
 
     public void AddRecoil(float vertical, float horizontal, float recoilRate, float centerSpeed)
     {
-        targetRecoil.y += vertical;
-        targetRecoil.x += Random.Range(-horizontal, horizontal);
+        _targetRecoil.y += vertical;
+        _targetRecoil.x += Random.Range(-horizontal, horizontal);
 
         _recoilRate = recoilRate;
         _centerSpeed = centerSpeed;
         
-        Debug.Log("Recoil is active");
+        //Debug.Log("Recoil is active");
     }
 }
