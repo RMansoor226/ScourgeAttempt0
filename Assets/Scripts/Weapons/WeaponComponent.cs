@@ -14,7 +14,7 @@ public class WeaponComponent : MonoBehaviour
     // private Animator animator;
 
     [SerializeField]
-    private WeaponData _weaponData;
+    private WeaponData weaponData;
     
     [SerializeField] 
     private Camera camera;
@@ -27,6 +27,12 @@ public class WeaponComponent : MonoBehaviour
     
     [SerializeField] 
     private AmmoCounter ammoCounter;
+
+    [SerializeField] 
+    private ParticleSystem muzzleFlash;
+
+    [SerializeField] 
+    private GameObject hitEffectPrefab;
 
     private bool _isReloading = false;
     private int _currentMagazine;
@@ -48,8 +54,8 @@ public class WeaponComponent : MonoBehaviour
         _audioSource.pitch = 1f;
         _audioSource.loop = false;
         
-        _currentMagazine = _weaponData.MagazineCapacity;
-        _reserveAmmo = _weaponData.ReserveAmmo;
+        _currentMagazine = weaponData.MagazineCapacity;
+        _reserveAmmo = weaponData.ReserveAmmo;
     }
 
     private void Start()
@@ -70,12 +76,26 @@ public class WeaponComponent : MonoBehaviour
             
             //Debug.Log($"Magazine currently has {_currentMagazine} bullets");
 
-            PlaySoundClip(_weaponData.GunshotClip);
+            //muzzleFlash.Play();
+            
+            
+            if (muzzleFlash == null)
+            {
+                Debug.LogError("Muzzle Flash Particle System is NOT assigned!");
+            }
+            else
+            {
+                muzzleFlash.Play();
+                //Debug.Log("Muzzle Flash triggered. Is Playing: " + muzzleFlash.isPlaying);
+            }
+            
+            PlaySoundClip(weaponData.GunshotClip);
+            
             playerView.AddRecoil(
-                _weaponData.VerticalRecoil, 
-                _weaponData.HorizontalRecoil,
-                _weaponData.RecoilRate,
-                _weaponData.CenterSpeed);
+                weaponData.VerticalRecoil, 
+                weaponData.HorizontalRecoil,
+                weaponData.RecoilRate,
+                weaponData.CenterSpeed);
             
             // Raycast bullet
             RaycastHit hit;
@@ -84,7 +104,7 @@ public class WeaponComponent : MonoBehaviour
             //     camera.transform.forward, 
             //     Color.red,
             //     50.0f);
-
+            
             if (Physics.Raycast(
                     camera.transform.position,
                     camera.transform.forward,
@@ -94,15 +114,17 @@ public class WeaponComponent : MonoBehaviour
             {
                 //Debug.Log("Weapon has been fired!");
                 //Debug.Log("Object Hit: " + hit.collider.gameObject.name);
+
+                DisplayHitEffect(hit);
             
                 if (hit.collider.TryGetComponent(out IDamageable damageable))
                 {
-                    damageable.TakeDamage(_weaponData.DamagePerShot);
+                    damageable.TakeDamage(weaponData.DamagePerShot);
                 }
             }
         } else if (OutOfAmmo())
         {
-            PlaySoundClip(_weaponData.DryFireClip);
+            PlaySoundClip(weaponData.DryFireClip);
         }
     }
 
@@ -110,7 +132,7 @@ public class WeaponComponent : MonoBehaviour
     {
         if (_isReloading ||
             _reserveAmmo <= 0 ||
-            _currentMagazine == _weaponData.MagazineCapacity)
+            _currentMagazine == weaponData.MagazineCapacity)
         {
             yield break;
         }
@@ -119,9 +141,9 @@ public class WeaponComponent : MonoBehaviour
         
         //Debug.Log("Reloading");
 
-        yield return new WaitForSeconds(_weaponData.ReloadTime);
+        yield return new WaitForSeconds(weaponData.ReloadTime);
         
-        int bulletsNeeded = _weaponData.MagazineCapacity - _currentMagazine;
+        int bulletsNeeded = weaponData.MagazineCapacity - _currentMagazine;
         int bulletsReloaded = Mathf.Min(bulletsNeeded, _reserveAmmo);
         
         _reserveAmmo -= bulletsReloaded;
@@ -158,5 +180,32 @@ public class WeaponComponent : MonoBehaviour
     private bool OutOfAmmo()
     {
         return _currentMagazine <= 0 && _reserveAmmo <= 0;
+    }
+
+    private void DisplayHitEffect(RaycastHit hit)
+    {
+        if (hitEffectPrefab == null)
+        {
+            Debug.Log("Hit Effect Prefab is not instantiated");
+        }
+                
+        Vector3 hitEffectSpawnPoint = hit.point + hit.normal * 0.05f;
+                
+        Debug.Log("Hit effect spawns here: " + hitEffectSpawnPoint);
+        
+        GameObject hitEffect = Instantiate(
+            hitEffectPrefab,
+            hitEffectSpawnPoint,
+            Quaternion.LookRotation(hit.normal * -1f, Vector3.up)
+        );
+
+        ParticleSystem hitParticles = hitEffect.GetComponentInChildren<ParticleSystem>();
+
+        if (hitParticles != null)
+        {
+            hitParticles.Play();
+        }
+                
+        Destroy(hitEffect, 5f);
     }
 }
