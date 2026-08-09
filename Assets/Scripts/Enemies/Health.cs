@@ -4,24 +4,23 @@ using UnityEngine;
 
 public class Health : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float maxHealth = 25f;
-    
+    private float _maxHealth;
     private float _currentHealth;
     private bool _isDead;
     
-    [SerializeField] private bool invincible = false;
+    [SerializeField] private bool invincible;
 
     public Action OnDeath;
     
     private void Awake()
     {
-        _currentHealth = maxHealth;
+        _currentHealth = _maxHealth;
         _isDead = false;
     }
 
     public void Initialize(float initialHealth)
     {
-        maxHealth = initialHealth;
+        _maxHealth = initialHealth;
         _currentHealth = initialHealth;
     }
     
@@ -30,7 +29,7 @@ public class Health : MonoBehaviour, IDamageable
         //Debug.Log($"{gameObject.name} had {_currentHealth} health.");
         _currentHealth -= damageAmount;
         
-        //Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
+        Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
         
         if (_currentHealth <= 0f)
         {
@@ -49,7 +48,7 @@ public class Health : MonoBehaviour, IDamageable
         
         if (invincible)
         {
-            Debug.Log($"{gameObject.name} is invincible.");
+            //Debug.Log($"{gameObject.name} is invincible.");
             _currentHealth = 1f;   // Prevent repeatedly calling Die()
             return;
         }
@@ -64,7 +63,7 @@ public class Health : MonoBehaviour, IDamageable
             return;
         }
         
-        Destroy(gameObject); // Object dies
+        //Destroy(gameObject); // Object dies
     }
 }
 

@@ -191,7 +191,7 @@ public class WeaponComponent : MonoBehaviour
                 
         Vector3 hitEffectSpawnPoint = hit.point + hit.normal * 0.05f;
                 
-        Debug.Log("Hit effect spawns here: " + hitEffectSpawnPoint);
+        //Debug.Log("Hit effect spawns here: " + hitEffectSpawnPoint);
         
         GameObject hitEffect = Instantiate(
             hitEffectPrefab,

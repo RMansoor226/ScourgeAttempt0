@@ -4,7 +4,7 @@ public class Zombie : MonoBehaviour
 {
     private Health _health;
     private ZombieAI _ai;
-
+    
     private void Awake()
     {
         _health = GetComponent<Health>();
