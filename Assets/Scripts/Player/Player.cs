@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     private HealthBar healthBar;
     [SerializeField] 
     private DamageVignette vignette;
+    [SerializeField] 
+    private DamageFlash flash;
 
     private float _maxHealth = 100f;
     private float _playerHealth;
@@ -75,7 +77,7 @@ public class Player : MonoBehaviour
         
         healthBar.UpdateHealthBar(percentHealth);
         vignette.UpdateVignetteIntensity(percentHealth);
-        
+        StartCoroutine(flash.UpdateDamageFlash());
     }
     
     private void PlayerDied()
