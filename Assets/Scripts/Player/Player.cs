@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private PlayerLook _look;
     private PlayerMovement _movement;
     private PlayerWeaponController _weapons;
+    private PlayerDamageFlinch _flinch;
 
     private AudioSource _playerAudio;
     [SerializeField] 
@@ -22,6 +23,8 @@ public class Player : MonoBehaviour
     [SerializeField] 
     private DamageFlash flash;
 
+    
+
     private float _maxHealth = 100f;
     private float _playerHealth;
 
@@ -34,6 +37,7 @@ public class Player : MonoBehaviour
         CheckAndInstantiate(ref _look, "Look");
         CheckAndInstantiate(ref _movement, "Movement");
         CheckAndInstantiate(ref _weapons, "Weapons");
+        CheckAndInstantiate(ref _flinch, "Flinch");
         
         CheckAndInstantiate(ref _playerAudio, "Audio");
 
@@ -74,6 +78,8 @@ public class Player : MonoBehaviour
         
         _playerHealth = _currentHealth;
         float percentHealth = (_playerHealth / _newMaxHealth);
+
+        _flinch.FlinchPlayer();
         
         healthBar.UpdateHealthBar(percentHealth);
         vignette.UpdateVignetteIntensity(percentHealth);

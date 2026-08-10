@@ -15,6 +15,11 @@ public class PlayerLook : MonoBehaviour
     private Vector2 _targetRecoil;
     private float _recoilRate;
     private float _centerSpeed;
+    
+    private Vector2 _currentFlinch;
+    private Vector2 _targetFlinch;
+    private float _flinchRate;
+    private float _recoverySpeed;
 
     private void Awake()
     {
@@ -34,6 +39,7 @@ public class PlayerLook : MonoBehaviour
         float mouseX = look.x * lookSensitivity * Time.deltaTime;
         float mouseY = look.y * lookSensitivity * Time.deltaTime;
         
+        // Gradually accumulate recoil
         _currentRecoil = Vector2.Lerp(
             _currentRecoil,
             _targetRecoil,
@@ -44,20 +50,31 @@ public class PlayerLook : MonoBehaviour
             Vector2.zero,
             _centerSpeed * Time.deltaTime);
         
+        // Gradually accumulate flinch
+        _currentFlinch = Vector2.Lerp(
+            _currentFlinch,
+            _targetFlinch,
+            _flinchRate * Time.deltaTime);
+
+        _targetFlinch = Vector2.Lerp(
+            _targetFlinch,
+            Vector2.zero,
+            _recoverySpeed * Time.deltaTime);
+        
         // Vertical camera rotation
         _verticalRotation -= mouseY;
         _verticalRotation = Mathf.Clamp(_verticalRotation, -90f, 90f);
 
-        float pitchWithRecoil = _verticalRotation - _currentRecoil.y;
+        float netPitch = _verticalRotation - (_currentRecoil.y + _currentFlinch.y);
 
-        cameraHolder.localRotation = Quaternion.Euler(pitchWithRecoil, 0f, 0f);
+        cameraHolder.localRotation = Quaternion.Euler(netPitch, 0f, 0f);
         
         // Horizontal player rotation
         _horizontalRotation += mouseX;
         
-        float yawWithRecoil = _horizontalRotation + _currentRecoil.x;
+        float netYaw = _horizontalRotation + (_currentRecoil.x + _currentFlinch.x);
         
-        transform.rotation = Quaternion.Euler(0f, yawWithRecoil, 0f);
+        transform.rotation = Quaternion.Euler(0f, netYaw, 0f);
     }
 
     public void AddRecoil(float vertical, float horizontal, float recoilRate, float centerSpeed)
@@ -69,5 +86,16 @@ public class PlayerLook : MonoBehaviour
         _centerSpeed = centerSpeed;
         
         //Debug.Log("Recoil is active");
+    }
+    
+    public void AddFlinch(float vertical, float horizontal, float flinchRate, float recoverySpeed)
+    {
+        _targetFlinch.y += vertical;
+        _targetFlinch.x += Random.Range(-horizontal, horizontal);
+
+        _flinchRate = flinchRate;
+        _recoverySpeed = recoverySpeed;
+        
+        //Debug.Log("Flinch is active");
     }
 }
