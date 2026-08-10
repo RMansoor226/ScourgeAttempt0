@@ -10,6 +10,7 @@ public class Health : MonoBehaviour, IDamageable
     
     [SerializeField] private bool invincible;
 
+    public Action<float, float> OnHealthChanged;
     public Action OnDeath;
     
     private void Awake()
@@ -30,6 +31,8 @@ public class Health : MonoBehaviour, IDamageable
         _currentHealth -= damageAmount;
         
         Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
+        
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
         
         if (_currentHealth <= 0f)
         {
