@@ -13,7 +13,7 @@ public class HealthBar : MonoBehaviour
 
     public void UpdateHealthBar(float percentHealthRemaining)
     {
-        Debug.Log($"Updating health bar size to {percentHealthRemaining}%");
-        _healthBar.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _maxWidth * (percentHealthRemaining / 100f));
+        //Debug.Log($"Updating health bar size to {percentHealthRemaining}%");
+        _healthBar.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _maxWidth * percentHealthRemaining);
     }
 }

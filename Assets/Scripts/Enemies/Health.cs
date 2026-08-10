@@ -70,7 +70,6 @@ public class Health : MonoBehaviour, IDamageable
     }
 }
 
-
 public interface IDamageable
 {
     public void TakeDamage(float damageAmount);

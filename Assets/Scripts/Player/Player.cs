@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private HealthBar healthBar;
+    [SerializeField] 
+    private DamageVignette vignette;
 
     private float _maxHealth = 100f;
     private float _playerHealth;
@@ -67,8 +69,13 @@ public class Player : MonoBehaviour
     private void PlayerHurt(float _currentHealth, float _newMaxHealth)
     {
         CheckAndPlayClip(painClip, "Pain");
+        
         _playerHealth = _currentHealth;
-        healthBar.UpdateHealthBar((_playerHealth / _newMaxHealth) * 100f);
+        float percentHealth = (_playerHealth / _newMaxHealth);
+        
+        healthBar.UpdateHealthBar(percentHealth);
+        vignette.UpdateVignetteIntensity(percentHealth);
+        
     }
     
     private void PlayerDied()
