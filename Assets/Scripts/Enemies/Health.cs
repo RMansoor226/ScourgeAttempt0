@@ -30,7 +30,7 @@ public class Health : MonoBehaviour, IDamageable
         //Debug.Log($"{gameObject.name} had {_currentHealth} health.");
         _currentHealth -= damageAmount;
         
-        Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
+        //Debug.Log($"{gameObject.name} took {damageAmount} damage. Health remaining: {_currentHealth}");
         
         OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
         

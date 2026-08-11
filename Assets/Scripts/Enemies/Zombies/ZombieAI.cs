@@ -26,6 +26,7 @@ public class ZombieAI : MonoBehaviour
     private float _attackTimer;
 
     private ZombieSpawner _spawner;
+    private bool _canChasePlayer;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class ZombieAI : MonoBehaviour
         }
         
         currentState = ZombieState.Idle;
+        _canChasePlayer = true;
         _animator = GetComponentInChildren<Animator>();
         _audioSource = GetComponent<AudioSource>();
     }
@@ -96,10 +98,14 @@ public class ZombieAI : MonoBehaviour
 
     private void TryChasePlayer()
     {
-        if (player != null)
+        if (player != null && _canChasePlayer)
         {
             ChangeState(ZombieState.Chasing);
             //Debug.Log("Zombie chasing");
+        }
+        else
+        {
+            Debug.Log("Can't chase player");
         }
     }
 
@@ -226,5 +232,21 @@ public class ZombieAI : MonoBehaviour
         PlayDeathSound();
 
         Destroy(gameObject, 5f);
+    }
+    
+    // A public method to allow other scripts to inform Zombie AI of playerDeath
+    public void EnterIdleState()
+    {
+        if (currentState == ZombieState.Idle)
+        {
+            return;
+        }
+
+        _canChasePlayer = false;
+        ChangeState(ZombieState.Idle);
+        
+        _navMeshAgent.enabled = false;
+
+        //Destroy(gameObject, 5f);
     }
 }

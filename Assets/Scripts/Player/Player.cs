@@ -3,6 +3,9 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private GameManager gameManager;
+    
     private Health _health;
     private PlayerInputHandler _inputs;
     private PlayerLook _look;
@@ -23,8 +26,6 @@ public class Player : MonoBehaviour
     [SerializeField] 
     private DamageFlash flash;
 
-    
-
     private float _maxHealth = 100f;
     private float _playerHealth;
 
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        
+        
         CheckAndInstantiate(ref _health, "Health");
         CheckAndInstantiate(ref _inputs, "Inputs");
         CheckAndInstantiate(ref _look, "Look");
@@ -98,6 +101,14 @@ public class Player : MonoBehaviour
         CheckAndPlayClip(deathClip, "Death");
         
         Debug.Log("Player has died!");
+
+        gameManager.PlayerDied(
+            _inputs, 
+            _look, 
+            _movement, 
+            _weapons, 
+            _flinch
+        );
     }
 
     private T CheckAndInstantiate<T>(ref T component, string componentName) where T : Component

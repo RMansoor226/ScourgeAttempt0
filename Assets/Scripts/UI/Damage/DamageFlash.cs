@@ -29,7 +29,7 @@ public class DamageFlash : MonoBehaviour
         float duration = 1f;
         float elapsed = 0f;
 
-        Debug.Log("Flash starts");
+        //Debug.Log("Flash starts");
 
         while (elapsed < duration)
         {
@@ -43,7 +43,7 @@ public class DamageFlash : MonoBehaviour
             yield return null; // Wait one frame
         }
         
-        Debug.Log("Ending Flash!");
+        //Debug.Log("Ending Flash!");
     }
 
 }
