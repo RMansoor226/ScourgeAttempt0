@@ -103,10 +103,6 @@ public class ZombieAI : MonoBehaviour
             ChangeState(ZombieState.Chasing);
             //Debug.Log("Zombie chasing");
         }
-        else
-        {
-            Debug.Log("Can't chase player");
-        }
     }
 
     private void Chase()

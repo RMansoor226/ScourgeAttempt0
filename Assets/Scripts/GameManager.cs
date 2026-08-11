@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     private Player player;
     [SerializeField] 
     private DeathScreen deathScreen;
-
+    
     private bool _isPlayerDead;
     
     private void Start()
@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
         
         deathScreen.ToggleDeathScreen();
         StopAllZombies();
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void StopAllZombies()
@@ -55,11 +58,17 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        Debug.Log("Restarting Game");
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void QuitGame()
     {
+        Debug.Log("Quitting Game");
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else
