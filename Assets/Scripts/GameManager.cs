@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     private Player player;
     [SerializeField] 
     private DeathScreen deathScreen;
+    [SerializeField] 
+    private CombatUI combatUI;
     
     private bool _isPlayerDead;
     
@@ -37,7 +39,9 @@ public class GameManager : MonoBehaviour
         
         // Debug.Log("Everything is disabled!");
         
-        deathScreen.ToggleDeathScreen();
+        deathScreen.SetDeathScreen(true);
+        combatUI.SetCombatUi(false);
+        
         StopAllZombies();
         
         Cursor.lockState = CursorLockMode.None;

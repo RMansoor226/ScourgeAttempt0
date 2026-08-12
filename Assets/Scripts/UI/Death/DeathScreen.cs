@@ -9,9 +9,9 @@ public class DeathScreen : MonoBehaviour
         _deathScreenVisible = false;
     }
 
-    public void ToggleDeathScreen()
+    public void SetDeathScreen(bool isVisible)
     {
-        _deathScreenVisible = !_deathScreenVisible;
+        _deathScreenVisible = isVisible;
         gameObject.SetActive(_deathScreenVisible);
     }
 }

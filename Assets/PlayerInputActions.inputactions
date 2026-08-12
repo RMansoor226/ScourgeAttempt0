@@ -70,7 +70,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleCursor",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "f33ddce2-d202-4755-a70b-c5e6fe10516f",
                     "expectedControlType": "",
@@ -263,7 +263,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleCursor",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
