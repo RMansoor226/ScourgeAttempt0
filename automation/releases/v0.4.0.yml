@@ -1,0 +1,104 @@
+release:
+  version: "0.4.0"
+  name: "Basic FPS Prototype"
+
+  description: |
+    Establishes a complete and stable FPS foundation for the project.
+    This release consolidates the core player, weapon, zombie, wave,
+    damage, game-state, audio, settings, and performance systems into
+    a playable basic FPS prototype.
+
+  milestone: "v0.4.0 — Basic FPS Prototype"
+
+  release_label: "release/0.4"
+
+tickets:
+
+  - number: 26
+    title: "Audio Manager"
+    type: "feature"
+    priority: "high"
+
+    description: |
+      Implement a centralized audio management system capable of
+      controlling and organizing gameplay, weapon, enemy, UI, music,
+      and ambient audio.
+
+    acceptance:
+      - "Gameplay audio can be played through the audio system."
+      - "Audio categories can be independently controlled."
+      - "Existing player, zombie, and weapon audio can use the system."
+      - "Audio playback responsibilities remain separated from gameplay logic."
+
+  - number: 27
+    title: "Settings Menu"
+    type: "feature"
+    priority: "medium"
+
+    description: |
+      Implement a basic settings menu providing player-facing
+      configuration options for audio, mouse sensitivity, and
+      display settings.
+
+    acceptance:
+      - "Master volume can be adjusted."
+      - "Music volume can be adjusted."
+      - "SFX volume can be adjusted."
+      - "Mouse sensitivity can be adjusted."
+      - "Display settings can be configured."
+      - "Settings persist for the current session."
+
+  - number: 28
+    title: "Object Pooling"
+    type: "optimization"
+    priority: "high"
+
+    description: |
+      Implement reusable object pooling for frequently spawned and
+      destroyed gameplay objects, beginning with zombies.
+
+    acceptance:
+      - "Zombie instances can be retrieved from a pool."
+      - "Dead zombies can be returned to the pool."
+      - "Wave spawning no longer requires Instantiate for every zombie."
+      - "Pooling does not break zombie initialization."
+      - "Pooling does not break death and wave completion tracking."
+
+  - number: 29
+    title: "Performance Profiling"
+    type: "optimization"
+    priority: "high"
+
+    description: |
+      Profile the current game to establish a performance baseline
+      and identify significant CPU, GPU, memory, garbage collection,
+      AI, spawning, and rendering bottlenecks.
+
+    acceptance:
+      - "A baseline performance profile is recorded."
+      - "CPU frame time is investigated."
+      - "GPU frame time is investigated."
+      - "Garbage collection behavior is investigated."
+      - "Zombie AI performance is investigated."
+      - "Object spawning performance is investigated."
+      - "At least one measurable optimization is implemented."
+
+  - number: 30
+    title: "v0.4.0 Basic FPS Prototype Integration"
+    type: "release"
+    priority: "high"
+
+    description: |
+      Integrate and stabilize all systems completed during the
+      v0.4.0 milestone and prepare the project for a playable
+      basic FPS prototype release.
+
+    acceptance:
+      - "The complete FPS gameplay loop can be played."
+      - "Pause functionality works."
+      - "Audio management works."
+      - "Settings function correctly."
+      - "Object pooling functions correctly."
+      - "Performance has been profiled."
+      - "No critical gameplay bugs remain."
+      - "The project can be built and played outside the Unity Editor."
