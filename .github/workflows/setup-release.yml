@@ -299,7 +299,7 @@ jobs:
                   [
                       "gh",
                       "issue",
-                      view",
+                      "view",
                       number,
                       "--json",
                       "number,title,body,state"
