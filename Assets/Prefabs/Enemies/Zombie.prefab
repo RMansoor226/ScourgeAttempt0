@@ -95,7 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed8c2081325a8941a471c49db5934d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
   invincible: 0
 --- !u!114 &7565892513222817535
 MonoBehaviour:
@@ -125,7 +124,7 @@ AudioSource:
   m_GameObject: {fileID: 6279186009749872689}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2989351936132842243, guid: b316a32df16f7094db92a64d92326718, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1

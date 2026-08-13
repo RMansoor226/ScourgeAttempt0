@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private AudioClip painClip;
     [SerializeField] 
     private AudioClip deathClip;
+    [SerializeField] 
+    private AudioClip[] footsteps;
 
     [SerializeField]
     private HealthBar healthBar;
@@ -33,8 +35,6 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        
-        
         CheckAndInstantiate(ref _health, "Health");
         CheckAndInstantiate(ref _inputs, "Inputs");
         CheckAndInstantiate(ref _look, "Look");
@@ -54,6 +54,11 @@ public class Player : MonoBehaviour
             _health.OnDeath += PlayerDied;
             _health.OnHealthChanged += PlayerHurt;
         }
+
+        if (_movement != null)
+        {
+            _movement.OnMovement += PlayerMoved;
+        }
     }
 
     private void OnDisable()
@@ -63,6 +68,11 @@ public class Player : MonoBehaviour
             _health.OnDeath -= PlayerDied;
             _health.OnHealthChanged -= PlayerHurt;
         }
+        
+        if (_movement != null)
+        {
+            _movement.OnMovement -= PlayerMoved;
+        }
     }
 
     public void Initialize()
@@ -71,7 +81,9 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player.Initialize failed: Health component is missing!");
         }
-        _health.Initialize(_playerHealth); 
+
+        _health.Initialize(_playerHealth);
+        
         _isDead = false;
     }
 
@@ -109,6 +121,12 @@ public class Player : MonoBehaviour
             _weapons, 
             _flinch
         );
+    }
+
+    private void PlayerMoved()
+    {
+        Debug.Log("Player footsteps should be playing!");
+        CheckAndPlayClip(footsteps[Random.Range(0, footsteps.Length)], "Footsteps");
     }
 
     private T CheckAndInstantiate<T>(ref T component, string componentName) where T : Component

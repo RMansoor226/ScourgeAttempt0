@@ -1,20 +1,25 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     private CharacterController _controller;
     private PlayerInputHandler _inputHandler;
+    private Player _player;
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravityConstant = -9.81f;
 
     private Vector3 _velocity;
+
+    public Action OnMovement;
     
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _inputHandler = GetComponent<PlayerInputHandler>();
+        _player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -40,6 +45,15 @@ public class PlayerMovement : MonoBehaviour
 
         _velocity.x = movement.x * currentSpeed;
         _velocity.z = movement.z * currentSpeed;
+
+        if (_velocity.magnitude > 5f && _controller.isGrounded)
+        {
+            OnMovement?.Invoke();
+        }
+        else
+        {
+            Debug.Log("Footsteps can't play!");
+        }
     }
 
     private void UpdateJumpPressed()
@@ -59,4 +73,5 @@ public class PlayerMovement : MonoBehaviour
         }
         _velocity.y += gravityConstant * Time.deltaTime;
     }
-}
+    
+ }

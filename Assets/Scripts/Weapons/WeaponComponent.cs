@@ -140,6 +140,8 @@ public class WeaponComponent : MonoBehaviour
         _isReloading = true;
         
         //Debug.Log("Reloading");
+        
+        PlaySoundClip(weaponData.ReloadClip);
 
         yield return new WaitForSeconds(weaponData.ReloadTime);
         
