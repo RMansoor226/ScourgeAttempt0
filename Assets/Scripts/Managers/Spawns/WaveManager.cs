@@ -8,22 +8,16 @@ public class WaveManager : MonoBehaviour
     
     [SerializeField]
     private float waveDelay = 15f;
-
     [SerializeField]
     private int initialWaveZombies = 2;
-
     [SerializeField] 
     private int hordeScaleFactor = 2;
-    
     [SerializeField]
     private float baseZombieHealth = 25f;
-
     [SerializeField]
     private float healthScaleFactor = 1f;
-    
     [SerializeField]
     private float baseZombieSpeed = 2f;
-
     [SerializeField]
     private float speedScaleFactor = 0.1f;
 
@@ -31,6 +25,9 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField]
     private RoundCounter roundCounter;
+
+    public Action OnRoundStart;
+    public Action OnRoundEnd;
     
     private void Start()
     {
@@ -57,6 +54,9 @@ public class WaveManager : MonoBehaviour
     IEnumerator StartNextWave()
     {
         yield return new WaitForSeconds(waveDelay);
+        
+        // Play Round Start Sound
+        OnRoundStart?.Invoke();
 
         // Debug.Log("Starting Wave " + currentWave);
         roundCounter.UpdateRoundCounter(currentWave);
@@ -72,6 +72,9 @@ public class WaveManager : MonoBehaviour
         yield return new WaitUntil(
             () => ZombieSpawner.Instance.WaveComplete
         );
+        
+        // Play Round End
+        OnRoundEnd?.Invoke();
         
         //Debug.Log("Next wave started");
         StartCoroutine(StartNextWave());

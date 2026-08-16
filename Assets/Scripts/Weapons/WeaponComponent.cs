@@ -6,11 +6,11 @@ public class WeaponComponent : MonoBehaviour
 {
     [SerializeField]
     private Transform muzzle;
-
     [SerializeField] 
     private Transform shellEject;
     
-    private AudioSource _audioSource;
+    [SerializeField]
+    private AudioManager audioManager;
     // private Animator animator;
 
     [SerializeField]
@@ -27,10 +27,8 @@ public class WeaponComponent : MonoBehaviour
     
     [SerializeField] 
     private AmmoCounter ammoCounter;
-
     [SerializeField] 
     private ParticleSystem muzzleFlash;
-
     [SerializeField] 
     private GameObject hitEffectPrefab;
 
@@ -41,18 +39,10 @@ public class WeaponComponent : MonoBehaviour
     private void Awake()
     {
         // Verify audio source exists
-        if (_audioSource == null)
+        if (audioManager == null)
         {
-            _audioSource = GetComponent<AudioSource>();
+            Debug.Log("Audio Manager is not instantiated!");
         }
-        
-        // Configure audio settings
-
-        _audioSource.playOnAwake = false;
-        _audioSource.spatialBlend = 1f;
-        _audioSource.volume = 1f;
-        _audioSource.pitch = 1f;
-        _audioSource.loop = false;
         
         _currentMagazine = weaponData.MagazineCapacity;
         _reserveAmmo = weaponData.ReserveAmmo;
@@ -89,7 +79,8 @@ public class WeaponComponent : MonoBehaviour
                 //Debug.Log("Muzzle Flash triggered. Is Playing: " + muzzleFlash.isPlaying);
             }
             
-            PlaySoundClip(weaponData.GunshotClip);
+            audioManager.PlaySfx(weaponData.GunshotClip);
+            //PlaySoundClip(weaponData.GunshotClip);
             
             playerView.AddRecoil(
                 weaponData.VerticalRecoil, 
@@ -124,7 +115,8 @@ public class WeaponComponent : MonoBehaviour
             }
         } else if (OutOfAmmo())
         {
-            PlaySoundClip(weaponData.DryFireClip);
+            audioManager.PlaySfx(weaponData.DryFireClip);
+            // PlaySoundClip(weaponData.DryFireClip);
         }
     }
 
@@ -141,7 +133,8 @@ public class WeaponComponent : MonoBehaviour
         
         //Debug.Log("Reloading");
         
-        PlaySoundClip(weaponData.ReloadClip);
+        audioManager.PlaySfx(weaponData.ReloadClip);
+        // PlaySoundClip(weaponData.ReloadClip);
 
         yield return new WaitForSeconds(weaponData.ReloadTime);
         
@@ -168,15 +161,6 @@ public class WeaponComponent : MonoBehaviour
     {
         return !_isReloading &&
                (reloadPressed || _currentMagazine <= 0);
-    }
-
-    private void PlaySoundClip(AudioClip _clip)
-    {
-        if (_clip != null)
-        {
-            _audioSource.clip = _clip;
-            _audioSource.Play();
-        }
     }
 
     private bool OutOfAmmo()

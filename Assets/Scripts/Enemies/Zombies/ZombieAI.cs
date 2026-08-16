@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,8 +26,10 @@ public class ZombieAI : MonoBehaviour
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
 
-    private ZombieSpawner _spawner;
     private bool _canChasePlayer;
+
+    public Action OnAttack;
+    public Action OnDeath;
 
     private void Awake()
     {
@@ -76,11 +79,6 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    public void Initialize(ZombieSpawner zombieSpawner)
-    {
-        _spawner = zombieSpawner;
-    }
-
     private void ChangeState(ZombieState newState)
     {
         currentState = newState;
@@ -111,13 +109,6 @@ public class ZombieAI : MonoBehaviour
         {
             _navMeshAgent.SetDestination(player.position); 
             _animator.SetBool("IsWalking", true);
-            
-            if (!_audioSource.isPlaying)
-            {
-                _audioSource.clip = chaseClip;
-                _audioSource.loop = true;
-                _audioSource.Play();
-            }
         }
     }
 
@@ -225,6 +216,7 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
+        OnDeath?.Invoke();
         PlayDeathSound();
 
         Destroy(gameObject, 5f);

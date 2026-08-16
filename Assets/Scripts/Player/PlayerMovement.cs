@@ -50,10 +50,6 @@ public class PlayerMovement : MonoBehaviour
         {
             OnMovement?.Invoke();
         }
-        else
-        {
-            Debug.Log("Footsteps can't play!");
-        }
     }
 
     private void UpdateJumpPressed()

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7565892513222817535}
   - component: {fileID: 3525335101000203903}
   - component: {fileID: 2748239717415891257}
+  - component: {fileID: 5641340947276923394}
   m_Layer: 6
   m_Name: Zombie
   m_TagString: Untagged
@@ -111,7 +112,7 @@ MonoBehaviour:
   player: {fileID: 0}
   currentState: 0
   idleClip: {fileID: 0}
-  chaseClip: {fileID: 0}
+  chaseClip: {fileID: 8300000, guid: bc2baab908f1b004691a6ecf7044f61c, type: 3}
   attackClip: {fileID: 8300000, guid: 12e7285fa38aaf943a0ed8c7f3c684eb, type: 3}
   deathClip: {fileID: 8300000, guid: 1d92c5ac0e056b045b4461b147f95be5, type: 3}
   attackCooldown: 2
@@ -224,6 +225,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b96d04b9635a4b17aa0963b75389c135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zombie
+--- !u!114 &5641340947276923394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6279186009749872689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b584100c9f0564181ca73c6ed64e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZombieAudio
+  minGrowlInterval: 5
+  maxGrowlInterval: 10
+  idleClip: {fileID: 0}
+  chaseClips:
+  - {fileID: 8300000, guid: 168c9a5ac7025814ea9c89e5098a3cad, type: 3}
+  - {fileID: 8300000, guid: ebb96c703224744479e6294bd49515d9, type: 3}
+  - {fileID: 8300000, guid: f1ff3e33006a291449618f6fc613e928, type: 3}
+  - {fileID: 8300000, guid: ceb2474913e8b5e40b17213af473d784, type: 3}
+  attackClip: {fileID: 8300000, guid: 12e7285fa38aaf943a0ed8c7f3c684eb, type: 3}
+  deathClip: {fileID: 8300000, guid: 1d92c5ac0e056b045b4461b147f95be5, type: 3}
 --- !u!1001 &2207978336576098406
 PrefabInstance:
   m_ObjectHideFlags: 0

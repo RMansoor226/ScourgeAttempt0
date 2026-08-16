@@ -19,6 +19,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 0f;
         
         pauseScreen.SetPauseScreen(true);
+        ToggleCursor(true);
     }
 
     public void Resume()
@@ -33,5 +34,16 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
         
         pauseScreen.SetPauseScreen(false);
+        ToggleCursor(false);
+    }
+    
+    private void ToggleCursor(bool cursorVisible)
+    {
+        Cursor.lockState =
+            (Cursor.lockState == CursorLockMode.Locked) ? 
+                CursorLockMode.None : 
+                CursorLockMode.Locked;
+
+        Cursor.visible = cursorVisible;
     }
 }

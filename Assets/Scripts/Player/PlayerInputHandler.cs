@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerInputHandler : MonoBehaviour
@@ -18,14 +19,10 @@ public class PlayerInputHandler : MonoBehaviour
     public bool InteractActive { get; private set; }
     
     public bool PausedGame { get; private set; }
-
-    private bool _gamePaused;
     
     private void Awake()
     {
         _inputActions = new PlayerInputActions();
-        
-        _gamePaused = false;
     }
 
     private void Start()
@@ -53,7 +50,7 @@ public class PlayerInputHandler : MonoBehaviour
             PauseGame();
         }
 
-        if (!_gamePaused)
+        if (!pauseManager.IsPaused)
         {
             MoveInput = _inputActions.Player.Move.ReadValue<Vector2>();
             LookInput = _inputActions.Player.Look.ReadValue<Vector2>();
@@ -68,29 +65,13 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void PauseGame()
     {
-        if (!_gamePaused)
+        if (!pauseManager.IsPaused)
         {
-            //Debug.Log("_gamePaused was false but is now true !");
             pauseManager.Pause();
-            _gamePaused = true;
         }
         else
         {
-            //Debug.Log("_gamePaused was true but is now false!");
             pauseManager.Resume();
-            _gamePaused = false;
         }
-
-        ToggleCursor();
-    }
-
-    private void ToggleCursor()
-    {
-        Cursor.lockState =
-            (Cursor.lockState == CursorLockMode.Locked) ? 
-                CursorLockMode.None : 
-                CursorLockMode.Locked;
-
-        Cursor.visible = !Cursor.visible;
     }
 }

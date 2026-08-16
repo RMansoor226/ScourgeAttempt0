@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
     private float _playerHealth;
 
     private bool _isDead;
+    private bool _footstepsPlaying;
 
     private void Awake()
     {
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour
         CheckAndInstantiate(ref _playerAudio, "Audio");
 
         _playerHealth = _maxHealth;
+        _footstepsPlaying = false;
     }
 
     private void OnEnable()
@@ -112,7 +115,7 @@ public class Player : MonoBehaviour
 
         CheckAndPlayClip(deathClip, "Death");
         
-        Debug.Log("Player has died!");
+        //Debug.Log("Player has died!");
 
         gameManager.PlayerDied(
             _inputs, 
@@ -125,8 +128,22 @@ public class Player : MonoBehaviour
 
     private void PlayerMoved()
     {
-        Debug.Log("Player footsteps should be playing!");
+        //Debug.Log("Player footsteps should be playing!");
+
+        if (!_footstepsPlaying)
+        {
+            StartCoroutine(PlayFootstepAudio());
+        }
+    }
+    
+    private IEnumerator PlayFootstepAudio()
+    {
         CheckAndPlayClip(footsteps[Random.Range(0, footsteps.Length)], "Footsteps");
+        _footstepsPlaying = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        _footstepsPlaying = false;
     }
 
     private T CheckAndInstantiate<T>(ref T component, string componentName) where T : Component

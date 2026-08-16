@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance { get; private set; }
+    private static AudioManager Instance { get; set; }
 
     [SerializeField] 
     private AudioSource musicSource;
     [SerializeField] 
     private AudioSource sfxSource;
+    [SerializeField] 
+    private AudioSource uiSource;
 
     private void Awake()
     {
@@ -33,7 +35,7 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(clip);
     }
     
-    public void PlayMusic(AudioClip clip)
+    public void PlayMusic(AudioClip clip, bool shouldLoop)
     {
         if (clip == null)
         {
@@ -41,7 +43,19 @@ public class AudioManager : MonoBehaviour
         }
 
         musicSource.clip = clip;
+        musicSource.loop = shouldLoop;
         musicSource.Play();
+    }
+    
+    public void PlayUiSfx(AudioClip clip)
+    {
+        if (clip == null)
+        {
+            return;
+        }
+
+        uiSource.clip = clip;
+        uiSource.Play();
     }
 
     public void StopMusic()
