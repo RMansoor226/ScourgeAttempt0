@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,7 +26,10 @@ public class ZombieAI : MonoBehaviour
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
 
-    private ZombieSpawner _spawner;
+    private bool _canChasePlayer;
+
+    public Action OnAttack;
+    public Action OnDeath;
 
     private void Awake()
     {
@@ -39,6 +43,7 @@ public class ZombieAI : MonoBehaviour
         }
         
         currentState = ZombieState.Idle;
+        _canChasePlayer = true;
         _animator = GetComponentInChildren<Animator>();
         _audioSource = GetComponent<AudioSource>();
     }
@@ -74,11 +79,6 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    public void Initialize(ZombieSpawner zombieSpawner)
-    {
-        _spawner = zombieSpawner;
-    }
-
     private void ChangeState(ZombieState newState)
     {
         currentState = newState;
@@ -96,7 +96,7 @@ public class ZombieAI : MonoBehaviour
 
     private void TryChasePlayer()
     {
-        if (player != null)
+        if (player != null && _canChasePlayer)
         {
             ChangeState(ZombieState.Chasing);
             //Debug.Log("Zombie chasing");
@@ -109,13 +109,6 @@ public class ZombieAI : MonoBehaviour
         {
             _navMeshAgent.SetDestination(player.position); 
             _animator.SetBool("IsWalking", true);
-            
-            if (!_audioSource.isPlaying)
-            {
-                _audioSource.clip = chaseClip;
-                _audioSource.loop = true;
-                _audioSource.Play();
-            }
         }
     }
 
@@ -223,8 +216,25 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
+        OnDeath?.Invoke();
         PlayDeathSound();
 
         Destroy(gameObject, 5f);
+    }
+    
+    // A public method to allow other scripts to inform Zombie AI of playerDeath
+    public void EnterIdleState()
+    {
+        if (currentState == ZombieState.Idle)
+        {
+            return;
+        }
+
+        _canChasePlayer = false;
+        ChangeState(ZombieState.Idle);
+        
+        _navMeshAgent.enabled = false;
+
+        //Destroy(gameObject, 5f);
     }
 }
