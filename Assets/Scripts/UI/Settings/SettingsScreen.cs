@@ -23,8 +23,8 @@ public class SettingsScreen : MonoBehaviour
     {
         if (!_isInitialized)
         {
-            _categoryScreens = transform.Find("Settings Category Screens");
-            _currentCategoryScreen = _categoryScreens.Find("Audio Category");
+            _categoryScreens = transform.Find("Category Screens");
+            _currentCategoryScreen = _categoryScreens.Find("Audio");
             _isInitialized = true;
         }
     }
@@ -34,7 +34,7 @@ public class SettingsScreen : MonoBehaviour
         _settingsVisible = isVisible;
         gameObject.SetActive(_settingsVisible);
         _categoryScreens.gameObject.SetActive(_settingsVisible); // Enable Settings Category Screens
-        _categoryScreens.Find("Audio Category").gameObject.SetActive(_settingsVisible);
+        _categoryScreens.Find("Audio").gameObject.SetActive(_settingsVisible);
     }
 
     private void SwitchCurrentSettingsScreen(SettingsCategory category)
