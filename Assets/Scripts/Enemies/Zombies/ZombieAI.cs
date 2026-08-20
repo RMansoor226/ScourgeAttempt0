@@ -15,13 +15,8 @@ public class ZombieAI : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     public ZombieState currentState;
     private Animator _animator;
-    private AudioSource _audioSource;
-
-    [SerializeField] private AudioClip idleClip;
-    [SerializeField] private AudioClip chaseClip;
-    [SerializeField] private AudioClip attackClip;
-    [SerializeField] private AudioClip deathClip;
-
+    private ZombieAudio _zombieAudio;
+    
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
 
@@ -40,7 +35,7 @@ public class ZombieAI : MonoBehaviour
         
         currentState = ZombieState.Idle;
         _animator = GetComponentInChildren<Animator>();
-        _audioSource = GetComponent<AudioSource>();
+        _zombieAudio = GetComponent<ZombieAudio>();
     }
 
     public void Initialize(float moveSpeed)
@@ -191,26 +186,6 @@ public class ZombieAI : MonoBehaviour
         _attackTimer -= Time.deltaTime;
     }
 
-    // Plays the attack sound when at the beginning of the zombie attack animation clip
-    public void PlayAttackSound()
-    {
-        if (_audioSource.isPlaying)
-        {
-            _audioSource.Stop();
-        }
-        _audioSource.PlayOneShot(attackClip);
-    }
-
-    public void PlayDeathSound()
-    {
-        if (_audioSource.isPlaying)
-        {
-            _audioSource.Stop();
-        }
-        
-        _audioSource.PlayOneShot(deathClip);
-    }
-
     // A public method to allow other scripts like Health to inform Zombie AI of death
     public void EnterDeadState()
     {
@@ -223,7 +198,12 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
+<<<<<<< Updated upstream
         PlayDeathSound();
+=======
+        OnDeath?.Invoke();
+        _zombieAudio.PlayDeathSound();
+>>>>>>> Stashed changes
 
         Destroy(gameObject, 5f);
     }
