@@ -4,12 +4,14 @@ public class PlayerLook : MonoBehaviour
 {
     private PlayerInputHandler _inputHandler;
 
-    [SerializeField] private Transform cameraHolder;
-    
-    [SerializeField] private float lookSensitivity = 50f;
+    [SerializeField] 
+    private Transform cameraHolder;
+    [SerializeField] 
+    private SettingsManager settingsManager;
     
     private float _verticalRotation = 0f;
     private float _horizontalRotation = 0f;
+    private float _lookSensitivity = 100f;
 
     private Vector2 _currentRecoil;
     private Vector2 _targetRecoil;
@@ -36,8 +38,8 @@ public class PlayerLook : MonoBehaviour
     {
         Vector2 look = _inputHandler.LookInput;
         
-        float mouseX = look.x * lookSensitivity * Time.deltaTime;
-        float mouseY = look.y * lookSensitivity * Time.deltaTime;
+        float mouseX = look.x * _lookSensitivity * Time.deltaTime;
+        float mouseY = look.y * _lookSensitivity * Time.deltaTime;
         
         // Gradually accumulate recoil
         _currentRecoil = Vector2.Lerp(
@@ -97,5 +99,10 @@ public class PlayerLook : MonoBehaviour
         _recoverySpeed = recoverySpeed;
         
         //Debug.Log("Flinch is active");
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        _lookSensitivity = sensitivity;
     }
 }

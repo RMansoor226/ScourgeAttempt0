@@ -20,13 +20,7 @@ public class SettingsManager : MonoBehaviour
     private Slider uiVolumeSlider;
     [SerializeField] 
     private Slider ambientVolumeSlider;
-
-    [Header("Video Settings")]
-    [SerializeField] 
-    private TMP_Dropdown resolutionDropdown;
-    [SerializeField]
-    private Toggle fullscreenCheckbox;
-
+    
     private const string MasterVolume = "MasterVolume";
     private const string MusicVolume = "MusicVolume";
     private const string SfxVolume = "SfxVolume";
@@ -39,17 +33,31 @@ public class SettingsManager : MonoBehaviour
         _sfxVolume, 
         _uiVolume, 
         _ambientVolume;
+
+    [Header("Video Settings")]
+    [SerializeField] 
+    private TMP_Dropdown resolutionDropdown;
+    [SerializeField]
+    private Toggle fullscreenCheckbox;
     
     private bool _fullScreenEnabled;
     
     private Resolution[] _resolutions;
-    
-    private List<Resolution> filteredResolutions = new List<Resolution>();
-    private List<string> filteredOptions = new List<string>();
+    private List<Resolution> _filteredResolutions = new List<Resolution>();
+    private List<string> _filteredOptions = new List<string>();
     
     private int _pendingResolutionOptionIndex;
     private int _currentResolutionOptionIndex = 0;
 
+    [Header("Controls Settings")] 
+    [SerializeField]
+    private Slider sensitivitySlider;
+    [SerializeField] 
+    private PlayerLook playerLook;
+
+    private float _baseSensitivity;
+    private float _currentSensitivity;
+    private float _pendingSensitivity;
 
     private void Awake()
     {
@@ -101,6 +109,10 @@ public class SettingsManager : MonoBehaviour
         _pendingResolutionOptionIndex = 0;
         _currentResolutionOptionIndex = 0;
         InitializeResolutionOptions();
+
+        _baseSensitivity = 100f;
+        sensitivitySlider.value = 0.5f;
+        _pendingSensitivity = sensitivitySlider.value * _baseSensitivity;
     }
 
     private void OnEnable()
@@ -171,7 +183,7 @@ public class SettingsManager : MonoBehaviour
 
     private void ApplyVideoSettings()
     {
-        Resolution resolution = filteredResolutions[_pendingResolutionOptionIndex];
+        Resolution resolution = _filteredResolutions[_pendingResolutionOptionIndex];
 
         Screen.SetResolution(
             resolution.width, 
@@ -188,7 +200,12 @@ public class SettingsManager : MonoBehaviour
     
     private void ApplyControlsSettings()
     {
-        Debug.Log("Controls Settings Applied!");
+        _currentSensitivity = _pendingSensitivity;
+        
+        Debug.Log($"Sensitivity is now = {_currentSensitivity}");
+        
+        playerLook.SetSensitivity(_currentSensitivity);
+        // Debug.Log("Controls Settings Applied!");
     }
     
     private void ApplyGameSettings()
@@ -237,7 +254,7 @@ public class SettingsManager : MonoBehaviour
 
         _pendingResolutionOptionIndex = _currentResolutionOptionIndex;
         
-        resolutionDropdown.AddOptions(filteredOptions);
+        resolutionDropdown.AddOptions(_filteredOptions);
         resolutionDropdown.value = _currentResolutionOptionIndex;
         resolutionDropdown.RefreshShownValue();
         
@@ -248,8 +265,8 @@ public class SettingsManager : MonoBehaviour
 
     private void FilterResolutionOptions()
     {
-        filteredResolutions.Clear();
-        filteredOptions.Clear();
+        _filteredResolutions.Clear();
+        _filteredOptions.Clear();
 
         HashSet<string> addedResolutions = new HashSet<string>();
         
@@ -274,10 +291,10 @@ public class SettingsManager : MonoBehaviour
                 continue;
             }
             
-            filteredResolutions.Add(resolution);
-            filteredOptions.Add(option);
+            _filteredResolutions.Add(resolution);
+            _filteredOptions.Add(option);
             
-            int filteredIndex = filteredResolutions.Count - 1;
+            int filteredIndex = _filteredResolutions.Count - 1;
             
             if (resolution.width == Screen.width &&
                 resolution.height == Screen.height)
@@ -285,5 +302,14 @@ public class SettingsManager : MonoBehaviour
                 _currentResolutionOptionIndex = filteredIndex;
             }
         }
+    }
+
+    public void SetPendingSensitivity(float sliderValue)
+    {
+        Debug.Log($"Slider value is {sliderValue}");
+        float sensitivity = _baseSensitivity * sliderValue;
+        _pendingSensitivity = sensitivity < 10 
+                                ? 10f 
+                                : sensitivity;
     }
 }

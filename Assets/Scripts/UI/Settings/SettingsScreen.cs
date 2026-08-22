@@ -36,7 +36,11 @@ public class SettingsScreen : MonoBehaviour
         _settingsVisible = isVisible;
         gameObject.SetActive(_settingsVisible);
         _categoryScreens.gameObject.SetActive(_settingsVisible); // Enable Settings Category Screens
+        
         _categoryScreens.Find("Audio").gameObject.SetActive(_settingsVisible);
+        _categoryScreens.Find("Video").gameObject.SetActive(false);
+        _categoryScreens.Find("Controls").gameObject.SetActive(false);
+        _categoryScreens.Find("Game").gameObject.SetActive(false);
     }
 
     private void SwitchCurrentSettingsScreen(SettingsCategory category)
