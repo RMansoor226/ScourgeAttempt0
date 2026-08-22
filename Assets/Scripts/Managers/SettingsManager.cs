@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -6,13 +8,8 @@ public class SettingsManager : MonoBehaviour
 {
     [SerializeField]
     private AudioMixer audioMixer;
-    
-    private const string MasterVolume = "MasterVolume";
-    private const string MusicVolume = "MusicVolume";
-    private const string SfxVolume = "SfxVolume";
-    private const string UiVolume = "UiVolume";
-    private const string AmbientVolume = "AmbientVolume";
 
+    [Header("Volume Sliders")]
     [SerializeField] 
     private Slider masterVolumeSlider;
     [SerializeField] 
@@ -24,12 +21,35 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] 
     private Slider ambientVolumeSlider;
 
+    [Header("Video Settings")]
+    [SerializeField] 
+    private TMP_Dropdown resolutionDropdown;
+    [SerializeField]
+    private Toggle fullscreenCheckbox;
+
+    private const string MasterVolume = "MasterVolume";
+    private const string MusicVolume = "MusicVolume";
+    private const string SfxVolume = "SfxVolume";
+    private const string UiVolume = "UiVolume";
+    private const string AmbientVolume = "AmbientVolume";
+    
     private float 
         _masterVolume, 
         _musicVolume, 
         _sfxVolume, 
         _uiVolume, 
         _ambientVolume;
+    
+    private bool _fullScreenEnabled;
+    
+    private Resolution[] _resolutions;
+    
+    private List<Resolution> filteredResolutions = new List<Resolution>();
+    private List<string> filteredOptions = new List<string>();
+    
+    private int _pendingResolutionOptionIndex;
+    private int _currentResolutionOptionIndex = 0;
+
 
     private void Awake()
     {
@@ -37,32 +57,50 @@ public class SettingsManager : MonoBehaviour
         {
             Debug.LogError("Master Volume Slider is not instantiated");
         }
-        
+
         if (musicVolumeSlider == null)
         {
             Debug.LogError("Music Volume Slider is not instantiated");
         }
-        
+
         if (sfxVolumeSlider == null)
         {
             Debug.LogError("SFX Volume Slider is not instantiated");
         }
-        
+
         if (uiVolumeSlider == null)
         {
             Debug.LogError("UI Volume Slider is not instantiated");
         }
-        
+
         if (ambientVolumeSlider == null)
         {
             Debug.LogError("Ambient Volume Slider is not instantiated");
         }
-        
+
+        if (resolutionDropdown == null)
+        {
+            Debug.LogError("Resolution Dropdown is not instantiated");
+        }
+
+        if (fullscreenCheckbox == null)
+        {
+            Debug.LogError("Fullscreen Checkbox is not instantiated");
+        }
+
         _masterVolume = 1f;
         _musicVolume = 1f;
         _sfxVolume = 1f;
         _uiVolume = 1f; 
         _ambientVolume = 1f;
+
+        _fullScreenEnabled = Screen.fullScreen;
+        fullscreenCheckbox.isOn = _fullScreenEnabled;
+        //Debug.Log($"Fullscreen enabled is {_fullScreenEnabled}");
+
+        _pendingResolutionOptionIndex = 0;
+        _currentResolutionOptionIndex = 0;
+        InitializeResolutionOptions();
     }
 
     private void OnEnable()
@@ -120,12 +158,132 @@ public class SettingsManager : MonoBehaviour
             : Mathf.Log10(percentVolume) * maxVolume;
     }
 
-    public void ApplyVolumeSettings()
+    private void ApplyVolumeSettings()
     {
         audioMixer.SetFloat(MasterVolume, _masterVolume);
         audioMixer.SetFloat(MusicVolume, _musicVolume);
         audioMixer.SetFloat(SfxVolume, _sfxVolume);
         audioMixer.SetFloat(UiVolume, _uiVolume);
         audioMixer.SetFloat(AmbientVolume, _ambientVolume);
+        
+        Debug.Log("Audio Settings Applied!");
+    }
+
+    private void ApplyVideoSettings()
+    {
+        Resolution resolution = filteredResolutions[_pendingResolutionOptionIndex];
+
+        Screen.SetResolution(
+            resolution.width, 
+            resolution.height, 
+            Screen.fullScreenMode
+        );
+        
+        // Debug.Log($"Resolution is {resolution.width} x {resolution.height}");
+        
+        Screen.fullScreen = _fullScreenEnabled;
+
+        _currentResolutionOptionIndex = _pendingResolutionOptionIndex;
+    }
+    
+    private void ApplyControlsSettings()
+    {
+        Debug.Log("Controls Settings Applied!");
+    }
+    
+    private void ApplyGameSettings()
+    {
+        Debug.Log("Game Settings Applied!");
+    }
+
+    public void ApplySettings(SettingsCategory category)
+    {
+        switch (category)
+        {
+            case SettingsCategory.Audio:
+                ApplyVolumeSettings();
+                break;
+            case SettingsCategory.Video:
+                ApplyVideoSettings();
+                break;
+            case SettingsCategory.Controls:
+                ApplyControlsSettings();
+                break;
+            case SettingsCategory.Game:
+                ApplyGameSettings();
+                break;
+            default:
+                Debug.LogError("Invalid Settings Category Reached");
+                break;
+        }
+    }
+
+    public void ToggleFullScreen()
+    {
+        _fullScreenEnabled = fullscreenCheckbox.isOn;
+    }
+
+    public void SetResolution(int index)
+    {
+        _pendingResolutionOptionIndex = index;
+    }
+    
+    private void InitializeResolutionOptions()
+    {
+        resolutionDropdown.ClearOptions();
+        _resolutions = Screen.resolutions;
+
+        FilterResolutionOptions();
+
+        _pendingResolutionOptionIndex = _currentResolutionOptionIndex;
+        
+        resolutionDropdown.AddOptions(filteredOptions);
+        resolutionDropdown.value = _currentResolutionOptionIndex;
+        resolutionDropdown.RefreshShownValue();
+        
+        //Debug.Log("Resolutions Initialized!");
+
+        resolutionDropdown.onValueChanged.AddListener(SetResolution);
+    }
+
+    private void FilterResolutionOptions()
+    {
+        filteredResolutions.Clear();
+        filteredOptions.Clear();
+
+        HashSet<string> addedResolutions = new HashSet<string>();
+        
+        for (int i = 0; i < _resolutions.Length; i++)
+        {
+            float aspectRatio = 
+                (float) _resolutions[i].width / _resolutions[i].height;
+
+            if (!Mathf.Approximately(aspectRatio, 16f / 9f))
+            {
+                continue;
+            }
+
+            Resolution resolution = _resolutions[i];
+            string option = resolution.width + " x " + resolution.height;
+            
+            // Debug.Log($"Adding {resolution.width} x {resolution.height}");
+            
+            if (!addedResolutions.Add(option))
+            {
+                // Debug.Log($"Rejecting duplicate entry: {option}");
+                continue;
+            }
+            
+            filteredResolutions.Add(resolution);
+            filteredOptions.Add(option);
+            
+            int filteredIndex = filteredResolutions.Count - 1;
+            
+            if (resolution.width == Screen.width &&
+                resolution.height == Screen.height)
+            {
+                _currentResolutionOptionIndex = filteredIndex;
+            }
+        }
     }
 }

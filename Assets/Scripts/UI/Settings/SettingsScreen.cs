@@ -18,6 +18,8 @@ public class SettingsScreen : MonoBehaviour
 
     [SerializeField]
     private PauseScreen pauseScreen;
+    [SerializeField] 
+    private SettingsManager settingsManager;
 
     private void Awake()
     {
@@ -72,6 +74,11 @@ public class SettingsScreen : MonoBehaviour
     public void SwitchToGameCategory()
     {
         SwitchCurrentSettingsScreen(SettingsCategory.Game);
+    }
+
+    public void ApplyCurrentSettings()
+    {
+        settingsManager.ApplySettings(_currentSettingsCategory);
     }
 
     public void ExitSettingsScreen()
