@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     private DamageVignette vignette;
     [SerializeField] 
     private DamageFlash flash;
-    
+
     private float _maxHealth = 100f;
     private float _playerHealth;
 
