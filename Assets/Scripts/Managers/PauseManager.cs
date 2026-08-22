@@ -4,6 +4,8 @@ public class PauseManager : MonoBehaviour
 {
     [SerializeField] 
     private PauseScreen pauseScreen;
+    [SerializeField]
+    private SettingsScreen settingsScreen;
     
     public bool IsPaused { get; private set; }
     
@@ -32,6 +34,11 @@ public class PauseManager : MonoBehaviour
         
         IsPaused = false;
         Time.timeScale = 1f;
+
+        if (settingsScreen.isActiveAndEnabled)
+        {
+            settingsScreen.ExitSettingsScreen();
+        }
         
         pauseScreen.SetPauseScreen(false);
         ToggleCursor(false);

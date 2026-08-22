@@ -308,8 +308,6 @@ public class SettingsManager : MonoBehaviour
     {
         Debug.Log($"Slider value is {sliderValue}");
         float sensitivity = _baseSensitivity * sliderValue;
-        _pendingSensitivity = sensitivity < 10 
-                                ? 10f 
-                                : sensitivity;
+        _pendingSensitivity = sensitivity;
     }
 }
