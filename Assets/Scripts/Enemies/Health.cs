@@ -64,8 +64,12 @@ public class Health : MonoBehaviour, IDamageable
             zombieAI.EnterDeadState();
             return;
         }
-        
-        //Destroy(gameObject); // Object dies
+    }
+
+    public void Reset()
+    {
+        _isDead = false;
+        _currentHealth = _maxHealth;
     }
 }
 

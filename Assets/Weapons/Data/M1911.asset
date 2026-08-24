@@ -23,7 +23,7 @@ MonoBehaviour:
   centerSpeed: 2
   reloadTime: 1
   magazineCapacity: 8
-  reserveAmmo: 40
+  reserveAmmo: 400
   gunshotClip: {fileID: 8300000, guid: f9ab20b4342184a46921955b3300481d, type: 3}
   dryFireClip: {fileID: 8300000, guid: ce8ccf5898a512742bd7b8904ac6d6ec, type: 3}
   reloadClip: {fileID: 8300000, guid: a8fd18346f4d3b546849c30675582a2a, type: 3}

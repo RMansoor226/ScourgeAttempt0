@@ -5,11 +5,13 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     public int currentWave = 0;
-    
+
+    [SerializeField] 
+    private bool spawnZombies = true;
     [SerializeField]
     private float waveDelay = 15f;
     [SerializeField]
-    private int initialWaveZombies = 2;
+    private int initialWaveZombies = 6;
     [SerializeField] 
     private int hordeScaleFactor = 2;
     [SerializeField]
@@ -19,10 +21,10 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     private float baseZombieSpeed = 2f;
     [SerializeField]
-    private float speedScaleFactor = 0.1f;
+    private float speedScaleFactor = 0.25f;
 
-    [SerializeField] private ZombieSpawner zombieSpawner;
-
+    [SerializeField] 
+    private ZombieSpawner zombieSpawner;
     [SerializeField]
     private RoundCounter roundCounter;
 
@@ -31,7 +33,14 @@ public class WaveManager : MonoBehaviour
     
     private void Start()
     {
-        StartCoroutine(StartNextWave());
+        if (spawnZombies)
+        {
+            StartCoroutine(StartNextWave());
+        }
+        else
+        {
+            Debug.Log("Zombies are not spawning!");
+        }
     }
 
     private WaveSettings GetWaveSettings(int wave)
@@ -39,10 +48,6 @@ public class WaveManager : MonoBehaviour
         int zombieCount = (initialWaveZombies + (currentWave * hordeScaleFactor));
         float zombieHealth = baseZombieHealth * (currentWave + 1) * healthScaleFactor;
         float zombieSpeed = baseZombieSpeed + (currentWave * speedScaleFactor);
-
-        // Debug.Log(zombieCount + " zombies");
-        // Debug.Log(zombieHealth + " health per zombie");
-        // Debug.Log(zombieSpeed + " units of speed");
         
         return new WaveSettings(
             zombieCount,
@@ -58,7 +63,6 @@ public class WaveManager : MonoBehaviour
         // Play Round Start Sound
         OnRoundStart?.Invoke();
 
-        // Debug.Log("Starting Wave " + currentWave);
         roundCounter.UpdateRoundCounter(currentWave);
 
         WaveSettings settings = GetWaveSettings(currentWave);
@@ -67,16 +71,14 @@ public class WaveManager : MonoBehaviour
 
         StartCoroutine(zombieSpawner.SpawnWave(settings));
         
-        //Debug.Log(zombieCount + " zombies spawned");
-        
         yield return new WaitUntil(
             () => ZombieSpawner.Instance.WaveComplete
         );
         
         // Play Round End
         OnRoundEnd?.Invoke();
+        Debug.Log("Ending round!");
         
-        //Debug.Log("Next wave started");
         StartCoroutine(StartNextWave());
     }
 }

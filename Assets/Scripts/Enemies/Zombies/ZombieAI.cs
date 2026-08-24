@@ -16,7 +16,6 @@ public class ZombieAI : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     public ZombieState currentState;
     private Animator _animator;
-    private ZombieAudio _zombieAudio;
     
     [SerializeField] private float attackCooldown = 1.5f;
     private float _attackTimer;
@@ -25,6 +24,8 @@ public class ZombieAI : MonoBehaviour
 
     public Action OnAttack;
     public Action OnDeath;
+
+    public Action<ZombieState> OnZombieStateChanged;
 
     private void Awake()
     {
@@ -40,7 +41,6 @@ public class ZombieAI : MonoBehaviour
         currentState = ZombieState.Idle;
         _canChasePlayer = true;
         _animator = GetComponentInChildren<Animator>();
-        _zombieAudio = GetComponent<ZombieAudio>();
     }
 
     public void Initialize(float moveSpeed)
@@ -87,6 +87,8 @@ public class ZombieAI : MonoBehaviour
         {
             _navMeshAgent.isStopped = true;
         }
+
+        OnZombieStateChanged?.Invoke(newState);
     }
 
     private void TryChasePlayer()
@@ -191,16 +193,10 @@ public class ZombieAI : MonoBehaviour
         
         _navMeshAgent.enabled = false;
         _animator.SetTrigger("Death");
-        PlayDeathSound();
-=======
+        
         OnDeath?.Invoke();
-        _zombieAudio.PlayDeathSound();
->>>>>>> Stashed changes
-
-        Destroy(gameObject, 5f);
     }
     
-    // A public method to allow other scripts to inform Zombie AI of playerDeath
     public void EnterIdleState()
     {
         if (currentState == ZombieState.Idle)
@@ -208,11 +204,14 @@ public class ZombieAI : MonoBehaviour
             return;
         }
 
-        _canChasePlayer = false;
+        _canChasePlayer = true;
         ChangeState(ZombieState.Idle);
         
-        _navMeshAgent.enabled = false;
+        _navMeshAgent.enabled = true;
+    }
 
-        //Destroy(gameObject, 5f);
+    public void Reset()
+    {
+        EnterIdleState();
     }
 }

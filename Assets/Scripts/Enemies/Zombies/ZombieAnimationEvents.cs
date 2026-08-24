@@ -2,28 +2,22 @@ using UnityEngine;
 
 public class ZombieAnimationEvents : MonoBehaviour
 {
-    private ZombieAI _zombieAI;
-    private ZombieAudio _zombieAudio;
+    private Zombie _zombie;
 
     private void Awake()
     {
-        _zombieAI = GetComponentInParent<ZombieAI>();
-        _zombieAudio = GetComponentInParent<ZombieAudio>();
+        _zombie = GetComponentInParent<Zombie>();
     }
 
     public void DamagePlayerEvent()
     {
         //Debug.Log("DamagePlayerEvent called");
-        _zombieAI.Attack();
+        _zombie.Attack();
     }
 
     public void AttackSoundEvent()
     {
         //Debug.Log("AttackSoundEvent called");
-        _zombieAI.PlayAttackSound();
-=======
-        //Debug.Log("AttackSoundEvent called");
-        _zombieAudio.PlayAttackSound();
->>>>>>> Stashed changes
+        _zombie.PlayAttackSound();
     }
 }

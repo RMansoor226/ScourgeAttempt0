@@ -178,7 +178,7 @@ public class SettingsManager : MonoBehaviour
         audioMixer.SetFloat(UiVolume, _uiVolume);
         audioMixer.SetFloat(AmbientVolume, _ambientVolume);
         
-        Debug.Log("Audio Settings Applied!");
+        // Debug.Log("Audio Settings Applied!");
     }
 
     private void ApplyVideoSettings()
@@ -202,7 +202,7 @@ public class SettingsManager : MonoBehaviour
     {
         _currentSensitivity = _pendingSensitivity;
         
-        Debug.Log($"Sensitivity is now = {_currentSensitivity}");
+        // Debug.Log($"Sensitivity is now = {_currentSensitivity}");
         
         playerLook.SetSensitivity(_currentSensitivity);
         // Debug.Log("Controls Settings Applied!");
@@ -306,7 +306,7 @@ public class SettingsManager : MonoBehaviour
 
     public void SetPendingSensitivity(float sliderValue)
     {
-        Debug.Log($"Slider value is {sliderValue}");
+        // Debug.Log($"Slider value is {sliderValue}");
         float sensitivity = _baseSensitivity * sliderValue;
         _pendingSensitivity = sensitivity;
     }

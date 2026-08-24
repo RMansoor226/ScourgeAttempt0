@@ -7,18 +7,19 @@ public class ZombieSpawner : MonoBehaviour
 {
     [SerializeField]
     private GameObject zombiePrefab;
-
+    [SerializeField] 
+    private ZombiePool zombiePool;
     [SerializeField] 
     private Transform[] spawnPoints;
-    
     [SerializeField]
     private float spawnDelay = 3f;
-    
     [SerializeField]
-    private int maxZombies = 4;
+    private int maxZombies = 6;
 
     private int _zombiesRemaining;
     private int _zombiesAlive;
+
+    private int _waveSpawnID;
 
     public bool WaveComplete => 
         _zombiesRemaining == 0 && 
@@ -39,52 +40,90 @@ public class ZombieSpawner : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if (zombiePrefab == null)
+        {
+            Debug.LogError("Zombie Prefab isn't instantiated");
+        }
+        
+        if (zombiePool == null)
+        {
+            Debug.LogError("Zombie Pool isn't instantiated");
+        }
+        
+        if (spawnPoints.Length <= 0)
+        {
+            Debug.LogError("No spawn points were instantiated");
+        }
+
         _zombiesAlive = 0;
     }
     
     private void SpawnZombie(WaveSettings settings)
     {
         int randomSpawnIndex = Random.Range(0, spawnPoints.Length);
-
         Transform spawnPoint = spawnPoints[randomSpawnIndex];
         
-        GameObject zombieObject = Instantiate(
-            zombiePrefab,
-            spawnPoint.position,
-            spawnPoint.rotation
-        );
+        // Retrieve zombie from pool
+        Zombie zombie = zombiePool.GetZombie();
         
-        // Initialize zombie difficulty stats
-        Zombie zombie = zombieObject.GetComponent<Zombie>();
+        if (zombie == null)
+        {
+            Debug.LogError("Failed to retrieve zombie from pool!");
+            return;
+        }
+        
+        zombie.transform.position = spawnPoint.position;
+        
+        // Initialize zombie stats
+        zombie.gameObject.SetActive(true);
         zombie.Initialize(settings);
 
-        zombie.GetZombieHealth().OnDeath += ZombieDied;
+        // Subscribe to OnDeath and remove existing subscriptions
+        Health health = zombie.GetZombieHealth();
         
-        _zombiesAlive++;
-        //Debug.Log("Spawning zombie on spawnPoint " + randomSpawnIndex);
+        health.OnDeath -= ZombieDied;
+        health.OnDeath += ZombieDied;
     }
 
     public void ZombieDied()
     {
+        if (_zombiesAlive <= 0)
+        {
+            Debug.LogError("ZombieDied called when no zombies were alive.");
+            return;
+        }
+        
         _zombiesAlive--;
-        //Debug.Log(_zombiesAlive + " zombies alive");
+        
+        Debug.Log($"Zombie just died. Now {_zombiesRemaining} Remaining. {_zombiesAlive} Alive.");
     }
     
     public IEnumerator SpawnWave(WaveSettings settings)
     {
+        int spawnID = ++_waveSpawnID;
+        
+        Debug.Log($"STARTING SPAWN WAVE COROUTINE {spawnID}");
+        
         _zombiesRemaining = settings.zombieCount;
-        //Debug.Log("Max zombies is: " + zombiesPerWave);
         
         while (_zombiesRemaining > 0)
         {
             if (_zombiesAlive < maxZombies)
             {
                 SpawnZombie(settings);
+                _zombiesAlive++;
                 _zombiesRemaining--;
-                //Debug.Log(_zombiesRemaining + " zombies remaining");
             }
+            
+            Debug.Log(
+                $"Wave coroutine {spawnID}: " +
+                $"{_zombiesRemaining} Remaining, " +
+                $"{_zombiesAlive} Alive."
+            );
             
             yield return new WaitForSeconds(spawnDelay);
         }
+        
+        Debug.Log($"ENDING SPAWN WAVE COROUTINE {spawnID}");
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 public class ZombieAudio : MonoBehaviour
 {
     private AudioSource _audioSource;
-    private ZombieAI _zombieAI;
 
     [SerializeField] 
     private float minGrowlInterval = 5f;
@@ -11,25 +10,29 @@ public class ZombieAudio : MonoBehaviour
     private float maxGrowlInterval = 7f;
     
     private float _nextGrowlTime;
+    private bool _isChasing;
     
-    [SerializeField] private AudioClip idleClip;
-    [SerializeField] private AudioClip[] chaseClips;
-    [SerializeField] private AudioClip attackClip;
-    [SerializeField] private AudioClip deathClip;
+    [SerializeField] 
+    private AudioClip idleClip;
+    [SerializeField] 
+    private AudioClip[] chaseClips;
+    [SerializeField] 
+    private AudioClip attackClip;
+    [SerializeField] 
+    private AudioClip deathClip;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _zombieAI = GetComponent<ZombieAI>();
     }
 
     private void Update()
     {
-        if (_zombieAI.currentState != ZombieState.Chasing)
+        if (!_isChasing)
         {
             return;
         }
-
+        
         if (_audioSource.isPlaying)
         {
             return;
@@ -44,8 +47,30 @@ public class ZombieAudio : MonoBehaviour
         }
     }
 
+    public void Initialize()
+    {
+        _isChasing = false;
+        _audioSource.clip = idleClip;
+        _nextGrowlTime = 0f;
+    }
+
+    public void StartChasingAudio()
+    {
+        _isChasing = true;
+    }
+    
+    public void StopChasingAudio()
+    {
+        _isChasing = false;
+    }
+
     private void PlayGrowl()
     {
+        if (chaseClips.Length == 0)
+        {
+            return;
+        }
+        
         int randomIndex = Random.Range(0, chaseClips.Length);
         
         _audioSource.clip = chaseClips[randomIndex];
@@ -60,6 +85,7 @@ public class ZombieAudio : MonoBehaviour
         {
             _audioSource.Stop();
         }
+        
         _audioSource.PlayOneShot(attackClip);
     }
 
@@ -71,5 +97,12 @@ public class ZombieAudio : MonoBehaviour
         }
         
         _audioSource.PlayOneShot(deathClip);
+    }
+
+    public void Reset()
+    {
+        _isChasing = false;
+        _audioSource.Stop();
+        _nextGrowlTime = 0f;
     }
 }
