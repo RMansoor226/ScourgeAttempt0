@@ -5,11 +5,15 @@ public class AudioManager : MonoBehaviour
     private static AudioManager Instance { get; set; }
 
     [SerializeField] 
-    private AudioSource musicSource;
+    private AudioSource baseMusicSource;
+    [SerializeField] 
+    private AudioSource roundMusicSource;
     [SerializeField] 
     private AudioSource sfxSource;
     [SerializeField] 
     private AudioSource uiSource;
+    [SerializeField] 
+    private AudioSource ambientSource;
 
     private void Awake()
     {
@@ -23,6 +27,9 @@ public class AudioManager : MonoBehaviour
         Instance = this;
 
         DontDestroyOnLoad(gameObject);
+
+        baseMusicSource.volume = 1f;
+        roundMusicSource.volume = 0.125f;
     }
 
     public void PlaySfx(AudioClip clip)
@@ -35,16 +42,26 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(clip);
     }
     
-    public void PlayMusic(AudioClip clip, bool shouldLoop)
+    public void PlayBaseMusic(AudioClip clip, bool shouldLoop)
     {
         if (clip == null)
         {
             return;
         }
 
-        musicSource.clip = clip;
-        musicSource.loop = shouldLoop;
-        musicSource.Play();
+        baseMusicSource.clip = clip;
+        baseMusicSource.loop = shouldLoop;
+        baseMusicSource.Play();
+    }
+    
+    public void PlayRoundMusic(AudioClip clip, bool shouldLoop)
+    {
+        if (clip == null)
+        {
+            return;
+        }
+        
+        roundMusicSource.PlayOneShot(clip);
     }
     
     public void PlayUiSfx(AudioClip clip)
@@ -60,6 +77,6 @@ public class AudioManager : MonoBehaviour
 
     public void StopMusic()
     {
-        musicSource.Stop();
+        baseMusicSource.Stop();
     }
 }

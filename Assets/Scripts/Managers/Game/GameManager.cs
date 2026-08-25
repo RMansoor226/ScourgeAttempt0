@@ -109,16 +109,16 @@ public class GameManager : MonoBehaviour
 
     private void PlayRoundStartMusic()
     {
-        audioManager.PlayMusic(roundStartMusic, false);
+        audioManager.PlayRoundMusic(roundStartMusic, false);
     }
     
     private void PlayRoundEndMusic()
     {
-        audioManager.PlayMusic(roundEndMusic, false);
+        audioManager.PlayRoundMusic(roundEndMusic, false);
     }
 
     private void PlayBaseMusic()
     {
-        audioManager.PlayMusic(baseGameMusic, true);
+        audioManager.PlayBaseMusic(baseGameMusic, true);
     }
 }

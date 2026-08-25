@@ -517,7 +517,7 @@ MonoBehaviour:
   deathScreen: {fileID: 131027645}
   combatUI: {fileID: 1488660699}
   audioManager: {fileID: 347773198}
-  baseGameMusic: {fileID: 8300000, guid: d28de280d51aaa746b2a21099e617bfe, type: 3}
+  baseGameMusic: {fileID: 8300000, guid: e82e6c1a1a4cf2d43a39d3435fa91d06, type: 3}
   roundStartMusic: {fileID: 8300000, guid: 3f6fde8d8c702254ab6b1e4455ed8f55, type: 3}
   roundEndMusic: {fileID: 8300000, guid: 396ba011d0818fb4b94cfd7ca09d98e0, type: 3}
 --- !u!4 &39102481
@@ -2292,9 +2292,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c96f80236349145925eb9ec1e47cc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  musicSource: {fileID: 1778579666}
+  baseMusicSource: {fileID: 0}
+  roundMusicSource: {fileID: 0}
   sfxSource: {fileID: 655046770}
   uiSource: {fileID: 849301211}
+  ambientSource: {fileID: 0}
 --- !u!1 &349067540
 GameObject:
   m_ObjectHideFlags: 0

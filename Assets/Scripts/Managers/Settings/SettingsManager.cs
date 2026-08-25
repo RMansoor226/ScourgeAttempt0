@@ -97,8 +97,8 @@ public class SettingsManager : MonoBehaviour
         }
 
         _masterVolume = 1f;
-        _musicVolume = 1f;
-        _sfxVolume = 1f;
+        _musicVolume = 0.5f;
+        _sfxVolume = 0.75f;
         _uiVolume = 1f; 
         _ambientVolume = 1f;
 

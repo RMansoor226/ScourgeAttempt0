@@ -13,9 +13,8 @@ public class ZombieSpawner : MonoBehaviour
     private Transform[] spawnPoints;
     [SerializeField]
     private float spawnDelay = 3f;
-    [SerializeField]
-    private int maxZombies = 6;
-
+    
+    private int maxZombies;
     private int _zombiesRemaining;
     private int _zombiesAlive;
 
@@ -55,6 +54,7 @@ public class ZombieSpawner : MonoBehaviour
             Debug.LogError("No spawn points were instantiated");
         }
 
+        maxZombies = zombiePool.GetMaxZombies();
         _zombiesAlive = 0;
     }
     
@@ -95,35 +95,35 @@ public class ZombieSpawner : MonoBehaviour
         
         _zombiesAlive--;
         
-        Debug.Log($"Zombie just died. Now {_zombiesRemaining} Remaining. {_zombiesAlive} Alive.");
+        // Debug.Log($"Zombie just died. Now {_zombiesRemaining} Remaining. {_zombiesAlive} Alive.");
     }
     
     public IEnumerator SpawnWave(WaveSettings settings)
     {
         int spawnID = ++_waveSpawnID;
         
-        Debug.Log($"STARTING SPAWN WAVE COROUTINE {spawnID}");
+        // Debug.Log($"STARTING SPAWN WAVE COROUTINE {spawnID}");
         
         _zombiesRemaining = settings.zombieCount;
         
         while (_zombiesRemaining > 0)
         {
-            if (_zombiesAlive < maxZombies)
+            if (_zombiesAlive < maxZombies && !zombiePool.IsPoolEmpty())
             {
                 SpawnZombie(settings);
                 _zombiesAlive++;
                 _zombiesRemaining--;
             }
             
-            Debug.Log(
-                $"Wave coroutine {spawnID}: " +
-                $"{_zombiesRemaining} Remaining, " +
-                $"{_zombiesAlive} Alive."
-            );
+            // Debug.Log(
+            //     $"Wave coroutine {spawnID}: " +
+            //     $"{_zombiesRemaining} Remaining, " +
+            //     $"{_zombiesAlive} Alive."
+            // );
             
             yield return new WaitForSeconds(spawnDelay);
         }
         
-        Debug.Log($"ENDING SPAWN WAVE COROUTINE {spawnID}");
+        // Debug.Log($"ENDING SPAWN WAVE COROUTINE {spawnID}");
     }
 }

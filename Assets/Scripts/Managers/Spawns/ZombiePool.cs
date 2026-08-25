@@ -7,19 +7,25 @@ public class ZombiePool : MonoBehaviour
 {
     private Queue<Zombie> _zombiePool;
 
-    [SerializeField] private GameObject zombiePrefab;
-    [SerializeField] private int poolSize = 10;
-    [SerializeField] private Transform poolSpawnPoint;
+    [SerializeField] 
+    private GameObject zombiePrefab;
+    [SerializeField] 
+    private Transform poolSpawnPoint;
+    [SerializeField] 
+    private int maxZombies = 10;
+
+    private int _poolSize;
 
     private void Awake()
     {
+        _poolSize = maxZombies;
         _zombiePool = new Queue<Zombie>();
         InitializeZombiePool();
     }
 
     private void InitializeZombiePool()
     {
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < _poolSize; i++)
         {
             GameObject zombieObject = Instantiate(
                 zombiePrefab,
@@ -56,5 +62,15 @@ public class ZombiePool : MonoBehaviour
         zombie.gameObject.SetActive(false);
         
         _zombiePool.Enqueue(zombie);
+    }
+
+    public bool IsPoolEmpty()
+    {
+        return _zombiePool.Count == 0;
+    }
+
+    public int GetMaxZombies()
+    {
+        return maxZombies;
     }
 }
