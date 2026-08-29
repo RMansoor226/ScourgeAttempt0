@@ -15,9 +15,9 @@ public class WaveManager : MonoBehaviour
     [SerializeField] 
     private int hordeScaleFactor = 2;
     [SerializeField]
-    private float baseZombieHealth = 25f;
+    private float baseZombieHealth = 100f;
     [SerializeField]
-    private float healthScaleFactor = 1f;
+    private float healthScaleFactor = 0.25f;
     [SerializeField]
     private float baseZombieSpeed = 2f;
     [SerializeField]
@@ -43,10 +43,10 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    private WaveSettings GetWaveSettings(int wave)
+    private WaveSettings GetWaveSettings()
     {
         int zombieCount = (initialWaveZombies + (currentWave * hordeScaleFactor));
-        float zombieHealth = baseZombieHealth * (currentWave + 1) * healthScaleFactor;
+        float zombieHealth = baseZombieHealth + (currentWave * healthScaleFactor);
         float zombieSpeed = baseZombieSpeed + (currentWave * speedScaleFactor);
         
         return new WaveSettings(
@@ -65,7 +65,7 @@ public class WaveManager : MonoBehaviour
 
         roundCounter.UpdateRoundCounter(currentWave);
 
-        WaveSettings settings = GetWaveSettings(currentWave);
+        WaveSettings settings = GetWaveSettings();
         
         currentWave++;
 

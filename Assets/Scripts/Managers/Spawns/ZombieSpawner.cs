@@ -13,8 +13,9 @@ public class ZombieSpawner : MonoBehaviour
     private Transform[] spawnPoints;
     [SerializeField]
     private float spawnDelay = 3f;
-    
-    private int maxZombies;
+
+    private bool _spawnZombies;
+    private int _maxZombies;
     private int _zombiesRemaining;
     private int _zombiesAlive;
 
@@ -54,7 +55,8 @@ public class ZombieSpawner : MonoBehaviour
             Debug.LogError("No spawn points were instantiated");
         }
 
-        maxZombies = zombiePool.GetMaxZombies();
+        _spawnZombies = true;
+        _maxZombies = zombiePool.GetMaxZombies();
         _zombiesAlive = 0;
     }
     
@@ -106,9 +108,9 @@ public class ZombieSpawner : MonoBehaviour
         
         _zombiesRemaining = settings.zombieCount;
         
-        while (_zombiesRemaining > 0)
+        while (_zombiesRemaining > 0 && _spawnZombies)
         {
-            if (_zombiesAlive < maxZombies && !zombiePool.IsPoolEmpty())
+            if (_zombiesAlive < _maxZombies && !zombiePool.IsPoolEmpty())
             {
                 SpawnZombie(settings);
                 _zombiesAlive++;
@@ -125,5 +127,10 @@ public class ZombieSpawner : MonoBehaviour
         }
         
         // Debug.Log($"ENDING SPAWN WAVE COROUTINE {spawnID}");
+    }
+
+    public void StopAllSpawns()
+    {
+        _spawnZombies = false;
     }
 }

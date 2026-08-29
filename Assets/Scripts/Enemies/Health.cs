@@ -10,7 +10,7 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private bool invincible;
 
     public Action<float, float> OnHealthChanged;
-    public Action OnDeath;
+    public Action OnDeath; 
     
     private void Awake()
     {

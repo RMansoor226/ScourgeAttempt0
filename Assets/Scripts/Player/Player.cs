@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     private GameManager gameManager;
+    [SerializeField] 
+    private ZombieSpawner zombieSpawner;
     
     private Health _health;
     private PlayerInputHandler _inputs;
@@ -124,6 +126,8 @@ public class Player : MonoBehaviour
             _weapons, 
             _flinch
         );
+        
+        zombieSpawner.StopAllSpawns();
     }
 
     private void PlayerMoved()

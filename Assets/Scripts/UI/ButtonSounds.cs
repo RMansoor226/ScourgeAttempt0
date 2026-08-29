@@ -27,7 +27,7 @@ public class ButtonSounds : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (audioManager == null)
         {
-            Debug.Log("AudioManger is not instantiated!");
+            Debug.Log("AudioManager is not instantiated!");
         }
     }
 

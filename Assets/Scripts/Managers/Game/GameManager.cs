@@ -77,13 +77,13 @@ public class GameManager : MonoBehaviour
 
     public void StopAllZombies()
     {
-        ZombieAI[] zombies = FindObjectsByType<ZombieAI>(
+        Zombie[] zombies = FindObjectsByType<Zombie>(
             FindObjectsSortMode.None
         );
 
-        foreach (ZombieAI zombie in zombies)
+        foreach (Zombie zombie in zombies)
         {
-            zombie.EnterIdleState();
+            zombie.gameObject.SetActive(false);
         }
     }
 
