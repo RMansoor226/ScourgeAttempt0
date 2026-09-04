@@ -1,14 +1,38 @@
 # Project Scourge
+### Unity 6 | C# | FPS Horde Shooter
 
-## FPS Horde Shooter Prototype
+> A survival-focused FPS horde shooter combining the round-based survival
+> loop of Call of Duty Zombies with DOOM-inspired combat and future
+> combat-puzzle encounter design.
 
-**Project Scourge** is a 3D first-person horde shooter developed in Unity and C#. The project is inspired by the survival gameplay loop of **Call of Duty Zombies**, the aggressive combat and encounter design of **DOOM**, and the dynamic enemy sandbox of **Left 4 Dead**.
+[🎮 Download v0.4.0] [🎥 Watch Demo]
 
-The long-term goal is to create a horde shooter where the player progresses from a vulnerable, resource-constrained survivor into a powerful combatant through **skillful play, strategic resource management, weapon choices, and mastery of the combat sandbox**.
+![Project Scourge Gameplay](path/to/screenshot.png)
 
-Rather than simply increasing enemy numbers and health indefinitely, the project aims to make later gameplay increasingly dependent on the player's ability to understand and exploit the interactions between weapons, enemies, resources, movement, and the environment.
+## Technical Highlights
 
----
+### State-Based Enemy AI
+
+Zombie behavior is implemented using an explicit state machine separating
+Idle, Chase, Attack, and Death behavior. This provides a foundation for
+introducing additional enemy archetypes and behaviors without coupling
+all enemy logic into a single monolithic system.
+
+### Object Pooling
+
+Zombie entities use object pooling to reduce repeated runtime
+instantiation and destruction during large horde encounters.
+
+### Data-Driven Weapons
+
+Weapon configuration is separated from runtime behavior using
+ScriptableObjects, allowing new weapons to be created and tuned without
+duplicating weapon logic.
+
+### Performance Profiling
+
+The project has been profiled during horde gameplay to establish CPU,
+GPU, memory, AI, spawning, and object-lifecycle performance baselines.
 
 ## Current Release
 
