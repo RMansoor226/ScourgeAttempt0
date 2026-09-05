@@ -5,7 +5,9 @@
 > loop of Call of Duty Zombies with DOOM-inspired combat and future
 > combat-puzzle encounter design.
 
-[🎮 Download v0.4.0] [🎥 Watch Demo]
+![🎮 Download v0.4.0]() 
+
+![🎥 Watch Demo](https://youtu.be/Tz_PT50aXgc)
 
 ![Project Scourge Gameplay](path/to/screenshot.png)
 
